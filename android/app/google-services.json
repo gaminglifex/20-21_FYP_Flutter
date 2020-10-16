@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "299557197516",
+    "firebase_url": "https://eietest2020.firebaseio.com",
+    "project_id": "eietest2020",
+    "storage_bucket": "eietest2020.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:299557197516:android:0706441df4a5028bd4d469",
+        "android_client_info": {
+          "package_name": "com.example.fyp_uiprototype"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "299557197516-n24rudbv2u4q3vs9ghbv05090i4883ot.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFpyrYpq2wHDIX5ZVxb67_btzvyCcPiDc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "299557197516-n24rudbv2u4q3vs9ghbv05090i4883ot.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
