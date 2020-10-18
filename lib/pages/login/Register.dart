@@ -1,6 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_uiprototype/AppRoutes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+Future<bool> usernameCheck(String username) async {
+  final result = await FirebaseFirestore.instance
+      .collection('users')
+      .where('username', isEqualTo: username)
+      .get();
+  return result.docs.isEmpty;
+}
+
+Future<bool> emailCheck(String email) async {
+  final result = await FirebaseFirestore.instance
+      .collection('users')
+      .where('email', isEqualTo: email)
+      .get();
+  return result.docs.isEmpty;
+}
 
 class Register extends StatefulWidget {
   @override
@@ -13,20 +30,20 @@ class _RegisterState extends State<Register> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _repasswordController = TextEditingController();
-  bool isSubmitting = true;
+  //final _dobController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
 
     final usernameField = TextFormField(
-      enabled: isSubmitting,
       controller: _usernameController,
       //keyboardType: TextInputType.visiblePassword,
       style: TextStyle(
         color: Colors.black,
       ),
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.account_circle_outlined),
         hintText: 'John Doe',
         labelText: 'Username',
         labelStyle: TextStyle(
@@ -36,16 +53,43 @@ class _RegisterState extends State<Register> {
           color: Colors.grey,
         ),
       ),
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Username cannot be empty.';
+        }
+        return null;
+      },
     );
 
-    final emailField = TextFormField(
-      enabled: isSubmitting,
-      controller: _emailController,
-      //keyboardType: TextInputType.visiblePassword,
+    /*
+    final dobField = TextFormField(
+      controller: _dobController,
       style: TextStyle(
         color: Colors.black,
       ),
       decoration: InputDecoration(
+        prefixIcon: Icon(
+          Icons.insert_invitation_outlined,
+        ),
+        hintText: "dd/mm/yyyy",
+        hintStyle: TextStyle(
+          color: Colors.grey,
+        ),
+        labelText: "Date of Birth",
+        labelStyle: TextStyle(
+          color: Colors.black,
+        ),
+      ),
+    );
+    */
+    final emailField = TextFormField(
+      controller: _emailController,
+      keyboardType: TextInputType.emailAddress,
+      style: TextStyle(
+        color: Colors.black,
+      ),
+      decoration: InputDecoration(
+        prefixIcon: Icon(Icons.email_outlined),
         hintText: 'JohnDoe@example.com',
         labelText: 'Email',
         labelStyle: TextStyle(
@@ -55,19 +99,30 @@ class _RegisterState extends State<Register> {
           color: Colors.grey,
         ),
       ),
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Email is required';
+        }
+        if (!RegExp(
+                "^[a-zA-Z0-9.!#%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*")
+            .hasMatch(value)) {
+          return 'Enter a valid emil address';
+        }
+        return null;
+      },
     );
 
     final passwordField = Column(
       children: <Widget>[
         TextFormField(
-          enabled: isSubmitting,
           controller: _passwordController,
           obscureText: true,
-          //keyboardType: TextInputType.emailAddress,
+          keyboardType: TextInputType.text,
           style: TextStyle(
             color: Colors.black,
           ),
           decoration: InputDecoration(
+            prefixIcon: Icon(Icons.lock_outlined),
             hintText: 'Password',
             labelText: 'Password',
             labelStyle: TextStyle(
@@ -77,6 +132,15 @@ class _RegisterState extends State<Register> {
               color: Colors.grey,
             ),
           ),
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Password is required';
+            }
+            if (value.length < 8) {
+              return 'Password length should greater than 8';
+            }
+            return null;
+          },
         ),
       ],
     );
@@ -84,16 +148,16 @@ class _RegisterState extends State<Register> {
     final repasswordField = Column(
       children: <Widget>[
         TextFormField(
-          enabled: isSubmitting,
           controller: _repasswordController,
           obscureText: true,
-          //keyboardType: TextInputType.emailAddress,
+          keyboardType: TextInputType.text,
           style: TextStyle(
             color: Colors.black,
           ),
           decoration: InputDecoration(
+            prefixIcon: Icon(Icons.lock_outlined),
             hintText: 'Password',
-            labelText: 'Re-enter Password',
+            labelText: 'Confirm Password',
             labelStyle: TextStyle(
               color: Colors.black,
             ),
@@ -101,6 +165,15 @@ class _RegisterState extends State<Register> {
               color: Colors.grey,
             ),
           ),
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Password is required';
+            }
+            if (value != _passwordController.text) {
+              return 'The confirm password does not match';
+            }
+            return null;
+          },
         ),
       ],
     );
@@ -111,6 +184,7 @@ class _RegisterState extends State<Register> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           usernameField,
+          //dobField,
           emailField,
           passwordField,
           repasswordField,
@@ -118,49 +192,72 @@ class _RegisterState extends State<Register> {
       ),
     );
 
-    final signupButton = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(25.0),
-      color: Colors.white,
-      child: MaterialButton(
-          minWidth: mq.size.width / 2.0,
-          padding: EdgeInsets.fromLTRB(10.0, 15.0, 10.0, 15.0),
-          child: Text(
-            'Register',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: 20.0,
-                color: Colors.black,
-                fontWeight: FontWeight.bold),
-          ),
-          onPressed: () async {
-            try {
-              UserCredential userCredential = await FirebaseAuth.instance
-                  .createUserWithEmailAndPassword(
-                      email: _emailController.text.trim(),
-                      password: _passwordController.text.trim());
-              print('DLLM');
-              User user = userCredential.user;
-            } on FirebaseAuthException catch (e) {
-              if (e.code == 'weak-password') {
-                print('The password provided is too weak.');
-              } else if (e.code == 'email-already-in-use') {
-                print('The account already exists for that email.');
+    final signupButton = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          height: mq.size.height / 15.0,
+          width: mq.size.width / 2.0,
+          child: RaisedButton(
+            color: Colors.white,
+            elevation: 5.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Text(
+              'Register',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
+            ),
+            onPressed: () async {
+              final valid =
+                  await usernameCheck(_usernameController.text.trim());
+              final valid2 = await emailCheck(_emailController.text.trim());
+              if (!_formKey.currentState.validate()) {
+                return Null;
+              } else if (!valid) {
+                print('Username already exist!');
+                return Null;
+              } else if (!valid2) {
+                print('Email already exist!');
+                return Null;
               }
-            } catch (e) {
-              print(e);
-            }
-          }),
+              try {
+                UserCredential userCredential = await FirebaseAuth.instance
+                    .createUserWithEmailAndPassword(
+                        email: _emailController.text.trim(),
+                        password: _passwordController.text.trim());
+                User user = userCredential.user;
+                await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(user.uid)
+                    .set({
+                  'username': _usernameController.text.trim(),
+                  'email': _emailController.text.trim(),
+                  'password': _passwordController.text.trim()
+                });
+                print('Done');
+              } on FirebaseAuthException catch (e) {
+                if (e.code == 'weak-password') {
+                  print('The password provided is too weak.');
+                } else if (e.code == 'email-already-in-use') {
+                  print('The account already exists for that email.');
+                }
+              } catch (e) {
+                print(e);
+              }
+            },
+          ),
+        ),
+      ],
     );
 
-    final bottom = Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    final bottom = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        signupButton,
-        Padding(
-          padding: EdgeInsets.all(8.0),
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -175,7 +272,7 @@ class _RegisterState extends State<Register> {
               child: Text(
                 'Login',
                 style: Theme.of(context).textTheme.subtitle1.copyWith(
-                      color: Colors.grey,
+                      color: Colors.black,
                       decoration: TextDecoration.underline,
                     ),
               ),
@@ -189,19 +286,42 @@ class _RegisterState extends State<Register> {
     );
 
     return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(32.0),
-          child: Container(
-            height: mq.size.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                fields,
-                bottom,
-              ],
-            ),
+      resizeToAvoidBottomPadding: false,
+      body: SafeArea(
+        child: Form(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Container(
+                  height: mq.size.height / 1.5,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 5.0,
+                        blurRadius: 7.0,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      fields,
+                      signupButton,
+                    ],
+                  ),
+                ),
+              ),
+              bottom,
+            ],
           ),
         ),
       ),

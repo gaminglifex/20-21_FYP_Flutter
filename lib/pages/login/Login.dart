@@ -20,11 +20,14 @@ class _LoginState extends State<Login> {
     final emailField = TextFormField(
       enabled: isSubmitting,
       controller: _emailController,
-      //keyboardType: TextInputType.visiblePassword,
       style: TextStyle(
         color: Colors.black,
       ),
       decoration: InputDecoration(
+        prefixIcon: Icon(
+          Icons.email_outlined,
+          color: Colors.black,
+        ),
         hintText: 'JohnDoe@example.com',
         labelText: 'Email',
         labelStyle: TextStyle(
@@ -46,6 +49,7 @@ class _LoginState extends State<Login> {
             color: Colors.black,
           ),
           decoration: InputDecoration(
+            prefixIcon: Icon(Icons.lock_outlined, color: Colors.black),
             hintText: 'Password',
             labelText: 'Password',
             labelStyle: TextStyle(
@@ -88,89 +92,110 @@ class _LoginState extends State<Login> {
       ),
     );
 
-    final loginButton = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(25.0),
-      color: Colors.white,
-      child: MaterialButton(
-        minWidth: mq.size.width / 2.0,
-        padding: EdgeInsets.fromLTRB(10.0, 15.0, 10.0, 15.0),
-        child: Text(
-          'Login',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.bold),
+    final loginButton = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          height: mq.size.height / 15.0,
+          width: mq.size.width / 2.0,
+          child: RaisedButton(
+            color: Colors.white,
+            elevation: 5.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Text(
+              'Login',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
+            ),
+            onPressed: () async {
+              try {
+                UserCredential userCredential =
+                    await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  email: _emailController.text,
+                  password: _passwordController.text,
+                );
+              } on FirebaseAuthException catch (e) {
+                if (e.code == 'user-not-found') {
+                  print('No user found for that email.');
+                } else if (e.code == 'wrong-password') {
+                  print('Wrong password provided for that user.');
+                }
+              } catch (e) {
+                print(e);
+              }
+            },
+          ),
         ),
-        onPressed: () async {
-          try {
-            UserCredential userCredential =
-                await FirebaseAuth.instance.signInWithEmailAndPassword(
-              email: _emailController.text,
-              password: _passwordController.text,
-            );
-          } on FirebaseAuthException catch (e) {
-            if (e.code == 'user-not-found') {
-              print('No user found for that email.');
-            } else if (e.code == 'wrong-password') {
-              print('Wrong password provided for that user.');
-            }
-          } catch (e) {
-            print(e);
-          }
-        },
-      ),
+      ],
     );
 
-    final bottom = Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    final bottom = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        loginButton,
-        Padding(
-          padding: EdgeInsets.all(8.0),
+        Text(
+          "Not a member?",
+          style: Theme.of(context)
+              .textTheme
+              .subtitle1
+              .copyWith(color: Colors.grey),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(
-              "Not a member?",
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle1
-                  .copyWith(color: Colors.grey),
-            ),
-            MaterialButton(
-              child: Text(
-                'Sign Up',
-                style: Theme.of(context).textTheme.subtitle1.copyWith(
-                      color: Colors.grey,
-                      decoration: TextDecoration.underline,
-                    ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pushNamed(AppRoutes.authRegister);
-              },
-            ),
-          ],
+        MaterialButton(
+          child: Text(
+            'Sign Up',
+            style: Theme.of(context).textTheme.subtitle1.copyWith(
+                  color: Colors.black,
+                  decoration: TextDecoration.underline,
+                ),
+          ),
+          onPressed: () {
+            Navigator.of(context).pushNamed(AppRoutes.authRegister);
+          },
         ),
       ],
     );
 
     return Scaffold(
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(32.0),
-          child: Container(
-            height: mq.size.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                fields,
-                bottom,
-              ],
+      resizeToAvoidBottomPadding: false,
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          key: _formKey,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Container(
+                  height: mq.size.height / 1.8,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(25.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      fields,
+                      loginButton,
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
+            bottom,
+          ],
         ),
       ),
     );
