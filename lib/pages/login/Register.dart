@@ -122,6 +122,7 @@ class _RegisterState extends State<Register> {
       ),
     );
     */
+
     final emailField = TextFormField(
       controller: _emailController,
       keyboardType: TextInputType.emailAddress,
