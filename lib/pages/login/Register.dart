@@ -36,6 +36,46 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
 
+    Future<void> _usernameAlert() async {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Message"),
+            content: Text("Username is already taken!"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Okay"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        },
+      );
+    }
+
+    Future<void> _emailAlert() async {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Message"),
+            content: Text("Email is already in use!"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text("Okay"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        },
+      );
+    }
+
     final usernameField = TextFormField(
       controller: _usernameController,
       //keyboardType: TextInputType.visiblePassword,
@@ -220,9 +260,11 @@ class _RegisterState extends State<Register> {
                 return Null;
               } else if (!valid) {
                 print('Username already exist!');
+                _usernameAlert();
                 return Null;
               } else if (!valid2) {
                 print('Email already exist!');
+                _emailAlert();
                 return Null;
               }
               try {
