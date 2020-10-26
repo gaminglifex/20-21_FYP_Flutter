@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_uiprototype/AppRoutes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -9,17 +10,68 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _emailController;
-  TextEditingController _passwordController;
-  bool isSubmitting = true;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  Future<void> _login() async {
+    final valid = await emailCheck(_emailController.text.trim());
+    if (valid) {
+      print('Email does not exist');
+      _emailAlert();
+      return null;
+    }
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim());
+      Navigator.of(context).pushNamed(AppRoutes.homePage);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<bool> emailCheck(String email) async {
+    final result = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+    return result.docs.isEmpty;
+  }
+
+  Future<void> _emailAlert() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Message"),
+          content: Text("Email does not exist!"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Okay"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
 
     final emailField = TextFormField(
-      enabled: isSubmitting,
       controller: _emailController,
+      keyboardType: TextInputType.emailAddress,
       style: TextStyle(
         color: Colors.black,
       ),
@@ -37,14 +89,20 @@ class _LoginState extends State<Login> {
           color: Colors.grey,
         ),
       ),
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Email cannot be empty!';
+        }
+        return null;
+      },
     );
 
     final passwordField = Column(
       children: <Widget>[
         TextFormField(
-          enabled: isSubmitting,
+          obscureText: true,
           controller: _passwordController,
-          keyboardType: TextInputType.emailAddress,
+          keyboardType: TextInputType.text,
           style: TextStyle(
             color: Colors.black,
           ),
@@ -59,6 +117,12 @@ class _LoginState extends State<Login> {
               color: Colors.grey,
             ),
           ),
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Password cannot be empty!';
+            }
+            return null;
+          },
         ),
         Padding(
           padding: EdgeInsets.all(2.0),
@@ -113,21 +177,7 @@ class _LoginState extends State<Login> {
                   fontWeight: FontWeight.bold),
             ),
             onPressed: () async {
-              try {
-                UserCredential userCredential =
-                    await FirebaseAuth.instance.signInWithEmailAndPassword(
-                  email: _emailController.text,
-                  password: _passwordController.text,
-                );
-              } on FirebaseAuthException catch (e) {
-                if (e.code == 'user-not-found') {
-                  print('No user found for that email.');
-                } else if (e.code == 'wrong-password') {
-                  print('Wrong password provided for that user.');
-                }
-              } catch (e) {
-                print(e);
-              }
+              _login();
             },
           ),
         ),
@@ -162,40 +212,43 @@ class _LoginState extends State<Login> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Form(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           key: _formKey,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Container(
-                  height: mq.size.height / 1.8,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.circular(25.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      fields,
-                      loginButton,
-                    ],
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Container(
+                    height: mq.size.height / 1.8,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(25.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.3),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        fields,
+                        loginButton,
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            bottom,
-          ],
+              bottom,
+            ],
+          ),
         ),
       ),
     );

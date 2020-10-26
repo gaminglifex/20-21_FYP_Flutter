@@ -3,22 +3,6 @@ import 'package:fyp_uiprototype/AppRoutes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-Future<bool> usernameCheck(String username) async {
-  final result = await FirebaseFirestore.instance
-      .collection('users')
-      .where('username', isEqualTo: username)
-      .get();
-  return result.docs.isEmpty;
-}
-
-Future<bool> emailCheck(String email) async {
-  final result = await FirebaseFirestore.instance
-      .collection('users')
-      .where('email', isEqualTo: email)
-      .get();
-  return result.docs.isEmpty;
-}
-
 class Register extends StatefulWidget {
   @override
   _RegisterState createState() => _RegisterState();
@@ -31,50 +15,101 @@ class _RegisterState extends State<Register> {
   final _passwordController = TextEditingController();
   final _repasswordController = TextEditingController();
   //final _dobController = TextEditingController();
+  Future<bool> usernameCheck(String username) async {
+    final result = await FirebaseFirestore.instance
+        .collection('users')
+        .where('username', isEqualTo: username)
+        .get();
+    return result.docs.isEmpty;
+  }
+
+  Future<bool> emailCheck(String email) async {
+    final result = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+    return result.docs.isEmpty;
+  }
+
+  Future<void> _usernameAlert() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Message"),
+          content: Text("Username is already taken!"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Okay"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _emailAlert() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Message"),
+          content: Text("Email is already in use!"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Okay"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _createAccount() async {
+    final valid = await usernameCheck(_usernameController.text.trim());
+    final valid2 = await emailCheck(_emailController.text.trim());
+    if (!_formKey.currentState.validate()) {
+      return null;
+    } else if (!valid) {
+      print('Username alreasdy exist!');
+      _usernameAlert();
+      return null;
+    } else if (!valid2) {
+      print('Email already exist!');
+      _emailAlert();
+      return null;
+    }
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim());
+      User user = userCredential.user;
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'username': _usernameController.text.trim(),
+        'email': _emailController.text.trim(),
+        'password': _passwordController.text.trim(),
+      });
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final mq = MediaQuery.of(context);
-
-    Future<void> _usernameAlert() async {
-      await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Message"),
-            content: Text("Username is already taken!"),
-            actions: <Widget>[
-              FlatButton(
-                child: Text("Okay"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-        },
-      );
-    }
-
-    Future<void> _emailAlert() async {
-      await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Message"),
-            content: Text("Email is already in use!"),
-            actions: <Widget>[
-              FlatButton(
-                child: Text("Okay"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-        },
-      );
-    }
 
     final usernameField = TextFormField(
       controller: _usernameController,
@@ -100,28 +135,6 @@ class _RegisterState extends State<Register> {
         return null;
       },
     );
-
-    /*
-    final dobField = TextFormField(
-      controller: _dobController,
-      style: TextStyle(
-        color: Colors.black,
-      ),
-      decoration: InputDecoration(
-        prefixIcon: Icon(
-          Icons.insert_invitation_outlined,
-        ),
-        hintText: "dd/mm/yyyy",
-        hintStyle: TextStyle(
-          color: Colors.grey,
-        ),
-        labelText: "Date of Birth",
-        labelStyle: TextStyle(
-          color: Colors.black,
-        ),
-      ),
-    );
-    */
 
     final emailField = TextFormField(
       controller: _emailController,
@@ -254,44 +267,7 @@ class _RegisterState extends State<Register> {
                   fontWeight: FontWeight.bold),
             ),
             onPressed: () async {
-              final valid =
-                  await usernameCheck(_usernameController.text.trim());
-              final valid2 = await emailCheck(_emailController.text.trim());
-              if (!_formKey.currentState.validate()) {
-                return Null;
-              } else if (!valid) {
-                print('Username already exist!');
-                _usernameAlert();
-                return Null;
-              } else if (!valid2) {
-                print('Email already exist!');
-                _emailAlert();
-                return Null;
-              }
-              try {
-                UserCredential userCredential = await FirebaseAuth.instance
-                    .createUserWithEmailAndPassword(
-                        email: _emailController.text.trim(),
-                        password: _passwordController.text.trim());
-                User user = userCredential.user;
-                await FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(user.uid)
-                    .set({
-                  'username': _usernameController.text.trim(),
-                  'email': _emailController.text.trim(),
-                  'password': _passwordController.text.trim()
-                });
-                print('Done');
-              } on FirebaseAuthException catch (e) {
-                if (e.code == 'weak-password') {
-                  print('The password provided is too weak.');
-                } else if (e.code == 'email-already-in-use') {
-                  print('The account already exists for that email.');
-                }
-              } catch (e) {
-                print(e);
-              }
+              _createAccount();
             },
           ),
         ),
