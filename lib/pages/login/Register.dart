@@ -14,6 +14,24 @@ class _RegisterState extends State<Register> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _repasswordController = TextEditingController();
+  //FocusNode _usernameFocusNode;
+  FocusNode _emailFocusNode = FocusNode();
+  FocusNode _passwordFocusNode = FocusNode();
+  FocusNode _repasswordFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _repasswordFocusNode.dispose();
+    super.dispose();
+  }
+
   //final _dobController = TextEditingController();
   Future<bool> usernameCheck(String username) async {
     final result = await FirebaseFirestore.instance
@@ -114,6 +132,9 @@ class _RegisterState extends State<Register> {
     final usernameField = TextFormField(
       controller: _usernameController,
       //keyboardType: TextInputType.visiblePassword,
+      onFieldSubmitted: (value) {
+        _emailFocusNode.requestFocus();
+      },
       style: TextStyle(
         color: Colors.black,
       ),
@@ -138,6 +159,10 @@ class _RegisterState extends State<Register> {
 
     final emailField = TextFormField(
       controller: _emailController,
+      focusNode: _emailFocusNode,
+      onFieldSubmitted: (value) {
+        _passwordFocusNode.requestFocus();
+      },
       keyboardType: TextInputType.emailAddress,
       style: TextStyle(
         color: Colors.black,
@@ -170,6 +195,10 @@ class _RegisterState extends State<Register> {
       children: <Widget>[
         TextFormField(
           controller: _passwordController,
+          focusNode: _passwordFocusNode,
+          onFieldSubmitted: (value) {
+            _repasswordFocusNode.requestFocus();
+          },
           obscureText: true,
           keyboardType: TextInputType.text,
           style: TextStyle(
@@ -203,6 +232,7 @@ class _RegisterState extends State<Register> {
       children: <Widget>[
         TextFormField(
           controller: _repasswordController,
+          focusNode: _repasswordFocusNode,
           obscureText: true,
           keyboardType: TextInputType.text,
           style: TextStyle(

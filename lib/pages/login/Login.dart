@@ -12,6 +12,18 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  FocusNode _passwordFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
 
   Future<void> _login() async {
     final valid = await emailCheck(_emailController.text.trim());
@@ -71,6 +83,9 @@ class _LoginState extends State<Login> {
 
     final emailField = TextFormField(
       controller: _emailController,
+      onFieldSubmitted: (value) {
+        _passwordFocusNode.requestFocus();
+      },
       keyboardType: TextInputType.emailAddress,
       style: TextStyle(
         color: Colors.black,
@@ -101,6 +116,7 @@ class _LoginState extends State<Login> {
       children: <Widget>[
         TextFormField(
           obscureText: true,
+          focusNode: _passwordFocusNode,
           controller: _passwordController,
           keyboardType: TextInputType.text,
           style: TextStyle(
