@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_uiprototype/AppRoutes.dart';
-import 'package:fyp_uiprototype/pages/login/Landing.dart';
+// import 'package:fyp_uiprototype/pages/login/Landing.dart';
+import 'package:fyp_uiprototype/pages/Home.dart';
 
 // void main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       routes: AppRoutes.define(),
-      home: LandingPage(),
+      home: Home(),
     );
   }
 }

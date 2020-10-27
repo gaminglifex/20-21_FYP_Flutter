@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp_uiprototype/pages/home.dart';
+import 'package:fyp_uiprototype/pages/Home.dart';
 import 'package:fyp_uiprototype/pages/login/Starting.dart';
 // import 'package:fyp_uiprototype/pages/login/Login.dart';
 import 'package:firebase_auth/firebase_auth.dart';

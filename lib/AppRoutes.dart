@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_uiprototype/pages/login/Login.dart';
 import 'package:fyp_uiprototype/pages/login/Register.dart';
-import 'package:fyp_uiprototype/pages/home.dart';
+import 'package:fyp_uiprototype/pages/Home.dart';
 
 class AppRoutes {
   AppRoutes._();

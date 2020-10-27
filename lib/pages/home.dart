@@ -24,7 +24,11 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      body: Container(),
+      body: Container(
+        child: Center(
+          child: Text('Home Page'),
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         fixedColor: Colors.black,
