@@ -11,6 +11,7 @@ class _ToolsState extends State<Tools> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Tools'),
+        backgroundColor: Colors.white,
       ),
       body: Center(
         child: Text('Tools'),

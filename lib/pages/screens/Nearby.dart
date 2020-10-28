@@ -11,6 +11,7 @@ class _NearbyState extends State<Nearby> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Nearby'),
+        backgroundColor: Colors.white,
       ),
       body: Center(
         child: Text('Nearby'),

@@ -11,6 +11,7 @@ class _NewsState extends State<News> {
     return Scaffold(
       appBar: AppBar(
         title: Text('News'),
+        backgroundColor: Colors.white,
       ),
       body: Center(
         child: Text('News'),

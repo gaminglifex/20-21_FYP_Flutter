@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp_uiprototype/pages/Home.dart';
+import 'package:fyp_uiprototype/pages/screens/BottomNav.dart';
 import 'package:fyp_uiprototype/pages/login/Starting.dart';
 // import 'package:fyp_uiprototype/pages/login/Login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -39,7 +39,7 @@ class LandingPage extends StatelessWidget {
                   return Starting();
                 } else {
                   //User logged in
-                  return Home();
+                  return BottomNav();
                 }
               }
 

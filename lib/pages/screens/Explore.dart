@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-class Home extends StatefulWidget {
+class Explore extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _ExploreState createState() => _ExploreState();
 }
 
-class _HomeState extends State<Home> {
-  int _currentIndex = 0;
-
+class _ExploreState extends State<Explore> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,48 +22,8 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      body: Container(
-        child: Center(
-          child: Text('Home Page'),
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        fixedColor: Colors.black,
-        type: BottomNavigationBarType.fixed,
-        unselectedItemColor: Colors.grey[600],
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home_rounded),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.article_outlined),
-            activeIcon: Icon(Icons.article_rounded),
-            label: 'News',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore_outlined),
-            activeIcon: Icon(Icons.explore_rounded),
-            label: 'Nearby',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.build_outlined),
-            activeIcon: Icon(Icons.build_rounded),
-            label: 'Tools',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle_outlined),
-            activeIcon: Icon(Icons.account_circle_rounded),
-            label: 'Profile',
-          ),
-        ],
+      body: Center(
+        child: Text('Explore'),
       ),
     );
   }
