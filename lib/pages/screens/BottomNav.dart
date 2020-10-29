@@ -41,7 +41,7 @@ class _BottomNavState extends State<BottomNav> {
         controller: _pageController,
         children: _pageOptions,
         onPageChanged: _onItemTapped,
-        physics: FixedExtentScrollPhysics(),
+        physics: ClampingScrollPhysics(),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,

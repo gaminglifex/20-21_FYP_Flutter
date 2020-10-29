@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:fyp_uiprototype/AppRoutes.dart';
 // import 'package:fyp_uiprototype/pages/login/Landing.dart';
 import 'package:fyp_uiprototype/pages/screens/BottomNav.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await Firebase.initializeApp();
-//   runApp(MyApp());
-// }
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
-main() => runApp(MyApp());
+// main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.

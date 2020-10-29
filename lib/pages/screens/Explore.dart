@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Explore extends StatefulWidget {
@@ -6,6 +7,9 @@ class Explore extends StatefulWidget {
 }
 
 class _ExploreState extends State<Explore> {
+  final CollectionReference _restaurantRef =
+      FirebaseFirestore.instance.collection('restaurant');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,8 +26,81 @@ class _ExploreState extends State<Explore> {
           ),
         ],
       ),
-      body: Center(
-        child: Text('Explore'),
+      body: Stack(
+        children: [
+          FutureBuilder<QuerySnapshot>(
+            future: _restaurantRef.get(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Scaffold(
+                  body: Center(
+                    child: Text('Error'),
+                  ),
+                );
+              }
+              if (snapshot.connectionState == ConnectionState.done) {
+                return ListView(
+                  children: snapshot.data.docs.map((document) {
+                    return Container(
+                      height: 300,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      margin: EdgeInsets.symmetric(
+                        vertical: 10.0,
+                        horizontal: 15.0,
+                      ),
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 300,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12.0),
+                              child: Image.network(
+                                "${document.data()['image']}",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 0.0,
+                            left: 0.0,
+                            right: 0.0,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 16.0,
+                                horizontal: 16.0,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "${document.data()['name']}",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 25.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                );
+              }
+              return Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
