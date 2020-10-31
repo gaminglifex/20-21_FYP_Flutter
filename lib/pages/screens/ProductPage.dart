@@ -73,12 +73,18 @@ class _ProductPageState extends State<ProductPage> {
                         horizontal: 12.0,
                       ),
                       child: RaisedButton(
-                        child: Text("Bring to there"),
+                        child: Text("Bring me to there"),
                         onPressed: () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => MapSample(),
+                                builder: (context) => MapSample(
+                                  restaurantId: widget.productId,
+                                  restaurantName: documentData['name'],
+                                  restaurantAddress: documentData['address'],
+                                  latitude: documentData['location'].latitude,
+                                  longitude: documentData['location'].longitude,
+                                ),
                               ));
                         },
                       ),
