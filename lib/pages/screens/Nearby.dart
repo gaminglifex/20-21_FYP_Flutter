@@ -10,6 +10,7 @@ class _NearbyState extends State<Nearby> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Nearby'),
         backgroundColor: Colors.white,
       ),

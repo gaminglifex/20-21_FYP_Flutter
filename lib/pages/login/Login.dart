@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_uiprototype/AppRoutes.dart';
+// import 'package:fyp_uiprototype/FirebaseAuthentication.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -13,6 +14,7 @@ class _LoginState extends State<Login> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   FocusNode _passwordFocusNode = FocusNode();
+  bool _obscureText = true;
 
   @override
   void initState() {
@@ -27,9 +29,12 @@ class _LoginState extends State<Login> {
 
   Future<void> _login() async {
     final valid = await emailCheck(_emailController.text.trim());
-    if (valid) {
+    if (!_formKey.currentState.validate()) {
+      alertBuilder("Please check your input!");
+      return null;
+    } else if (valid) {
       print('Email does not exist');
-      _emailAlert();
+      alertBuilder("Email does not exist!");
       return null;
     }
     try {
@@ -57,13 +62,13 @@ class _LoginState extends State<Login> {
     return result.docs.isEmpty;
   }
 
-  Future<void> _emailAlert() async {
+  Future<void> alertBuilder(String message) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Message"),
-          content: Text("Email does not exist!"),
+          content: Text(message),
           actions: <Widget>[
             FlatButton(
               child: Text("Okay"),
@@ -115,7 +120,6 @@ class _LoginState extends State<Login> {
     final passwordField = Column(
       children: <Widget>[
         TextFormField(
-          obscureText: true,
           focusNode: _passwordFocusNode,
           controller: _passwordController,
           keyboardType: TextInputType.text,
@@ -124,6 +128,16 @@ class _LoginState extends State<Login> {
           ),
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.lock_outlined, color: Colors.black),
+            suffixIcon: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _obscureText = !_obscureText;
+                });
+              },
+              child: Icon(_obscureText
+                  ? Icons.visibility_off_outlined
+                  : Icons.visibility),
+            ),
             hintText: 'Password',
             labelText: 'Password',
             labelStyle: TextStyle(
@@ -133,6 +147,7 @@ class _LoginState extends State<Login> {
               color: Colors.grey,
             ),
           ),
+          obscureText: _obscureText,
           validator: (value) {
             if (value.isEmpty) {
               return 'Password cannot be empty!';

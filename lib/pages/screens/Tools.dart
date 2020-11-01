@@ -10,6 +10,7 @@ class _ToolsState extends State<Tools> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Tools'),
         backgroundColor: Colors.white,
       ),

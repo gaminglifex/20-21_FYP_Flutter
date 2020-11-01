@@ -10,6 +10,7 @@ class _NewsState extends State<News> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('News'),
         backgroundColor: Colors.white,
       ),

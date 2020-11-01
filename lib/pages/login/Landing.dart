@@ -45,7 +45,7 @@ class LandingPage extends StatelessWidget {
 
               return Scaffold(
                 body: Center(
-                  child: Text('Checking Authentication'),
+                  child: CircularProgressIndicator(),
                 ),
               );
             },
@@ -54,7 +54,7 @@ class LandingPage extends StatelessWidget {
 
         return Scaffold(
           body: Center(
-            child: Text('Initializing App'),
+            child: CircularProgressIndicator(),
           ),
         );
       },

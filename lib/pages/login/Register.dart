@@ -18,6 +18,9 @@ class _RegisterState extends State<Register> {
   FocusNode _emailFocusNode = FocusNode();
   FocusNode _passwordFocusNode = FocusNode();
   FocusNode _repasswordFocusNode = FocusNode();
+  //Password visibility
+  bool _obscureText = true;
+  bool _obscureText2 = true;
 
   @override
   void initState() {
@@ -49,33 +52,13 @@ class _RegisterState extends State<Register> {
     return result.docs.isEmpty;
   }
 
-  Future<void> _usernameAlert() async {
+  Future<void> alertBuilder(String message) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Message"),
-          content: Text("Username is already taken!"),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("Okay"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> _emailAlert() async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Message"),
-          content: Text("Email is already in use!"),
+          content: Text(message),
           actions: <Widget>[
             FlatButton(
               child: Text("Okay"),
@@ -93,14 +76,15 @@ class _RegisterState extends State<Register> {
     final valid = await usernameCheck(_usernameController.text.trim());
     final valid2 = await emailCheck(_emailController.text.trim());
     if (!_formKey.currentState.validate()) {
+      alertBuilder("Please chekc your input!");
       return null;
     } else if (!valid) {
-      print('Username alreasdy exist!');
-      _usernameAlert();
+      print("Username alreasdy exist!");
+      alertBuilder("Username alreasdy exist!");
       return null;
     } else if (!valid2) {
-      print('Email already exist!');
-      _emailAlert();
+      print("Email already exist!");
+      alertBuilder("Email already exist!");
       return null;
     }
     try {
@@ -114,6 +98,7 @@ class _RegisterState extends State<Register> {
         'email': _emailController.text.trim(),
         'password': _passwordController.text.trim(),
       });
+      Navigator.of(context).pushNamed(AppRoutes.homePage);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -199,13 +184,23 @@ class _RegisterState extends State<Register> {
           onFieldSubmitted: (value) {
             _repasswordFocusNode.requestFocus();
           },
-          obscureText: true,
+          obscureText: _obscureText,
           keyboardType: TextInputType.text,
           style: TextStyle(
             color: Colors.black,
           ),
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.lock_outlined),
+            suffixIcon: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _obscureText = !_obscureText;
+                });
+              },
+              child: Icon(_obscureText
+                  ? Icons.visibility_off_outlined
+                  : Icons.visibility_rounded),
+            ),
             hintText: 'Password',
             labelText: 'Password',
             labelStyle: TextStyle(
@@ -233,13 +228,23 @@ class _RegisterState extends State<Register> {
         TextFormField(
           controller: _repasswordController,
           focusNode: _repasswordFocusNode,
-          obscureText: true,
+          obscureText: _obscureText2,
           keyboardType: TextInputType.text,
           style: TextStyle(
             color: Colors.black,
           ),
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.lock_outlined),
+            suffixIcon: GestureDetector(
+              onTap: () {
+                setState(() {
+                  _obscureText2 = !_obscureText2;
+                });
+              },
+              child: Icon(_obscureText2
+                  ? Icons.visibility_off_outlined
+                  : Icons.visibility_rounded),
+            ),
             hintText: 'Password',
             labelText: 'Confirm Password',
             labelStyle: TextStyle(
