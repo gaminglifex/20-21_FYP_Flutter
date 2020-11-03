@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fyp_uiprototype/AppRoutes.dart';
 // import 'package:fyp_uiprototype/FirebaseAuthentication.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fyp_uiprototype/common_widget/alert_dialog.dart';
+import 'package:fyp_uiprototype/pages/login/FirebaseAuthService.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -29,12 +32,17 @@ class _LoginState extends State<Login> {
 
   Future<void> _login() async {
     final valid = await emailCheck(_emailController.text.trim());
+    final valid2 = await passwordCheck(_passwordController.text.trim());
     if (!_formKey.currentState.validate()) {
-      alertBuilder("Please check your input!");
+      AlertDialogBuilder.alertBuilder("Please check your input!", context);
       return null;
     } else if (valid) {
-      print('Email does not exist');
-      alertBuilder("Email does not exist!");
+      // print('Email does not exist');
+      AlertDialogBuilder.alertBuilder("Email does not exist!", context);
+      return null;
+    } else if (valid2) {
+      // print('Email does not exist');
+      AlertDialogBuilder.alertBuilder("Password does not match!", context);
       return null;
     }
     try {
@@ -62,24 +70,12 @@ class _LoginState extends State<Login> {
     return result.docs.isEmpty;
   }
 
-  Future<void> alertBuilder(String message) async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Message"),
-          content: Text(message),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("Okay"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
-          ],
-        );
-      },
-    );
+  Future<bool> passwordCheck(String password) async {
+    final result = await FirebaseFirestore.instance
+        .collection('users')
+        .where('password', isEqualTo: password)
+        .get();
+    return result.docs.isEmpty;
   }
 
   @override

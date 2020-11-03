@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fyp_uiprototype/AppRoutes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fyp_uiprototype/common_widget/alert_dialog.dart';
+import 'package:fyp_uiprototype/pages/login/FirebaseAuthService.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -52,39 +54,17 @@ class _RegisterState extends State<Register> {
     return result.docs.isEmpty;
   }
 
-  Future<void> alertBuilder(String message) async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Message"),
-          content: Text(message),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("Okay"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            )
-          ],
-        );
-      },
-    );
-  }
-
   Future<void> _createAccount() async {
     final valid = await usernameCheck(_usernameController.text.trim());
     final valid2 = await emailCheck(_emailController.text.trim());
     if (!_formKey.currentState.validate()) {
-      alertBuilder("Please chekc your input!");
+      AlertDialogBuilder.alertBuilder("Please check your input!", context);
       return null;
     } else if (!valid) {
-      print("Username alreasdy exist!");
-      alertBuilder("Username alreasdy exist!");
+      AlertDialogBuilder.alertBuilder("Username alreasdy exist!", context);
       return null;
     } else if (!valid2) {
-      print("Email already exist!");
-      alertBuilder("Email already exist!");
+      AlertDialogBuilder.alertBuilder("Email already exist!", context);
       return null;
     }
     try {
