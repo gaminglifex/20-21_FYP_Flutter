@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fyp_uiprototype/AppRoutes.dart';
+import 'package:fyp_uiprototype/common_widget/AppRoutes.dart';
 import 'package:fyp_uiprototype/pages/login/Landing.dart';
 // import 'package:fyp_uiprototype/pages/screens/BottomNav.dart';
 // import 'package:firebase_core/firebase_core.dart';

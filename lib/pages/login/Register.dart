@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fyp_uiprototype/AppRoutes.dart';
+import 'package:fyp_uiprototype/common_widget/AppRoutes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fyp_uiprototype/common_widget/alert_dialog.dart';
-import 'package:fyp_uiprototype/pages/login/FirebaseAuthService.dart';
+import 'package:fyp_uiprototype/auth_service/FirebaseAuthService.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -38,25 +38,17 @@ class _RegisterState extends State<Register> {
   }
 
   //final _dobController = TextEditingController();
-  Future<bool> usernameCheck(String username) async {
+  Future<bool> fieldCheck(String field, String text) async {
     final result = await FirebaseFirestore.instance
         .collection('users')
-        .where('username', isEqualTo: username)
-        .get();
-    return result.docs.isEmpty;
-  }
-
-  Future<bool> emailCheck(String email) async {
-    final result = await FirebaseFirestore.instance
-        .collection('users')
-        .where('email', isEqualTo: email)
+        .where(field, isEqualTo: text)
         .get();
     return result.docs.isEmpty;
   }
 
   Future<void> _createAccount() async {
-    final valid = await usernameCheck(_usernameController.text.trim());
-    final valid2 = await emailCheck(_emailController.text.trim());
+    final valid = await fieldCheck("usernme", _usernameController.text.trim());
+    final valid2 = await fieldCheck("email", _emailController.text.trim());
     if (!_formKey.currentState.validate()) {
       AlertDialogBuilder.alertBuilder("Please check your input!", context);
       return null;
@@ -67,27 +59,8 @@ class _RegisterState extends State<Register> {
       AlertDialogBuilder.alertBuilder("Email already exist!", context);
       return null;
     }
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: _emailController.text.trim(),
-              password: _passwordController.text.trim());
-      User user = userCredential.user;
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-        'username': _usernameController.text.trim(),
-        'email': _emailController.text.trim(),
-        'password': _passwordController.text.trim(),
-      });
-      Navigator.of(context).pushNamed(AppRoutes.homePage);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
-    } catch (e) {
-      print(e);
-    }
+    createUserWithEmailAndPassword(_usernameController.text.trim(),
+        _emailController.text.trim(), _passwordController.text.trim(), context);
   }
 
   @override

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fyp_uiprototype/AppRoutes.dart';
+import 'package:fyp_uiprototype/common_widget/AppRoutes.dart';
 // import 'package:fyp_uiprototype/FirebaseAuthentication.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fyp_uiprototype/common_widget/alert_dialog.dart';
-import 'package:fyp_uiprototype/pages/login/FirebaseAuthService.dart';
+import 'package:fyp_uiprototype/auth_service/FirebaseAuthService.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -30,52 +29,30 @@ class _LoginState extends State<Login> {
     super.dispose();
   }
 
+  Future<bool> fieldCheck(String field, String text) async {
+    final result = await FirebaseFirestore.instance
+        .collection('users')
+        .where(field, isEqualTo: text)
+        .get();
+    return result.docs.isEmpty;
+  }
+
   Future<void> _login() async {
-    final valid = await emailCheck(_emailController.text.trim());
-    final valid2 = await passwordCheck(_passwordController.text.trim());
+    final valid = await fieldCheck("email", _emailController.text.trim());
+    final valid2 =
+        await fieldCheck("password", _passwordController.text.trim());
     if (!_formKey.currentState.validate()) {
       AlertDialogBuilder.alertBuilder("Please check your input!", context);
       return null;
     } else if (valid) {
-      // print('Email does not exist');
       AlertDialogBuilder.alertBuilder("Email does not exist!", context);
       return null;
     } else if (valid2) {
-      // print('Email does not exist');
       AlertDialogBuilder.alertBuilder("Password does not match!", context);
       return null;
     }
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-              email: _emailController.text.trim(),
-              password: _passwordController.text.trim());
-      Navigator.of(context).pushNamed(AppRoutes.homePage);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  Future<bool> emailCheck(String email) async {
-    final result = await FirebaseFirestore.instance
-        .collection('users')
-        .where('email', isEqualTo: email)
-        .get();
-    return result.docs.isEmpty;
-  }
-
-  Future<bool> passwordCheck(String password) async {
-    final result = await FirebaseFirestore.instance
-        .collection('users')
-        .where('password', isEqualTo: password)
-        .get();
-    return result.docs.isEmpty;
+    signInWithEmailAndPassword(
+        _emailController.text.trim(), _passwordController.text.trim(), context);
   }
 
   @override

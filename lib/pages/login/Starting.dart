@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fyp_uiprototype/AppRoutes.dart';
+import 'package:fyp_uiprototype/common_widget/AppRoutes.dart';
 
 class Starting extends StatefulWidget {
   @override
