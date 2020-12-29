@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_uiprototype/common_widget/AppRoutes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fyp_uiprototype/common_widget/alert_dialog.dart';
 import 'package:fyp_uiprototype/auth_service/FirebaseAuthService.dart';

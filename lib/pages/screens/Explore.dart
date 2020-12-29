@@ -1,5 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp_uiprototype/common_widget/dataController.dart';
+import 'package:get/get.dart';
 import 'package:fyp_uiprototype/pages/screens/ProductPage.dart';
 
 class Explore extends StatefulWidget {
@@ -8,8 +9,8 @@ class Explore extends StatefulWidget {
 }
 
 class _ExploreState extends State<Explore> {
-  final CollectionReference _restaurantRef =
-      FirebaseFirestore.instance.collection('restaurant');
+  // final CollectionReference _restaurantRef =
+  //     FirebaseFirestore.instance.collection('restaurant');
 
   @override
   Widget build(BuildContext context) {
@@ -27,92 +28,113 @@ class _ExploreState extends State<Explore> {
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          FutureBuilder<QuerySnapshot>(
-            future: _restaurantRef.get(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Scaffold(
-                  body: Center(
-                    child: Text('Error'),
-                  ),
-                );
-              }
-              if (snapshot.connectionState == ConnectionState.done) {
-                return ListView(
-                  children: snapshot.data.docs.map((document) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ProductPage(
-                                productId: document.id,
-                              ),
-                            ));
-                      },
-                      child: Container(
-                        height: 300,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        margin: EdgeInsets.symmetric(
-                          vertical: 10.0,
-                          horizontal: 15.0,
-                        ),
-                        child: Stack(
-                          children: [
-                            Container(
-                              height: 300,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12.0),
-                                child: Image.network(
-                                  "${document.data()['image']}",
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 0.0,
-                              left: 0.0,
-                              right: 0.0,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16.0,
-                                  horizontal: 16.0,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "${document.data()['name']}",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 25.0,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                );
-              }
-              return Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: double.infinity,
+                height: 200,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(color: Colors.black),
+                  ],
+                  //TODO: image
                 ),
-              );
-            },
-          ),
-        ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(
+                'Recommended',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(
+              width: 400.0,
+              height: 300.0,
+              child: GetBuilder<DataController>(
+                init: DataController(),
+                builder: (value) {
+                  return FutureBuilder(
+                    future: value.getData('restaurant'),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            backgroundColor: Colors.black,
+                          ),
+                        );
+                      } else {
+                        return new ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                              onTap: () {
+                                Get.to(
+                                  ProductPage(),
+                                  transition: Transition.leftToRightWithFade,
+                                  arguments: snapshot.data[index],
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        height: 150.0,
+                                        width: 200.0,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            image: DecorationImage(
+                                                fit: BoxFit.cover,
+                                                image: NetworkImage(snapshot
+                                                    .data[index]
+                                                    .data()['image']))),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 8.0),
+                                        child: Container(
+                                          constraints:
+                                              BoxConstraints(maxWidth: 200.0),
+                                          child: Text(
+                                            snapshot.data[index].data()['name'],
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
+                  );
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

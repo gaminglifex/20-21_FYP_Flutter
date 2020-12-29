@@ -1,30 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:fyp_uiprototype/auth_service/FirebaseAuthService.dart';
-import 'package:fyp_uiprototype/common_widget/AppRoutes.dart';
 
 class Profile extends StatefulWidget {
   @override
   _ProfileState createState() => _ProfileState();
-}
-
-Future<void> _logOut(BuildContext context) async {
-  await Firebase.initializeApp();
-  try {
-    await FirebaseAuth.instance.signOut();
-    FirebaseAuth.instance.authStateChanges().listen((User user) {
-      if (user == null) {
-        Navigator.of(context).pushNamed(AppRoutes.landingPage);
-        print('Navigated');
-      } else {
-        print('GG');
-      }
-    });
-    print('Success');
-  } catch (e) {
-    print(e);
-  }
 }
 
 class _ProfileState extends State<Profile> {
@@ -36,13 +15,26 @@ class _ProfileState extends State<Profile> {
         title: Text('Profile'),
         backgroundColor: Colors.white,
       ),
-      body: Column(
+      body: Stack(
         children: <Widget>[
-          RaisedButton(
-            child: Text('Logout'),
-            onPressed: () async {
-              _logOut(context);
-            },
+          Center(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  SizedBox(
+                    height: 50,
+                    child: RaisedButton(
+                      child: Text('Logout'),
+                      onPressed: () async {
+                        signOut(context);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),

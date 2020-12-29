@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:flutter/material.dart';
 import 'package:fyp_uiprototype/common_widget/AppRoutes.dart';
-// import 'package:fyp_uiprototype/pages/screens/BottomNav.dart';
+import 'package:fyp_uiprototype/common_widget/alert_dialog.dart';
 
 final FirebaseAuth _fireAuth = FirebaseAuth.instance;
 
@@ -32,7 +32,11 @@ Future<void> signInWithEmailAndPassword(
       return null;
     } else {
       // return BottomNav();
-      Navigator.of(context).pushNamed(AppRoutes.homePage);
+      AlertDialogBuilder.loadingBuilder(context);
+      Future.delayed(Duration(seconds: 2), () {
+        Navigator.of(context).pushNamed(AppRoutes.homePage);
+      });
+      // Navigator.of(context).pushNamed(AppRoutes.homePage);
     }
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
@@ -95,15 +99,27 @@ Future<void> createUserWithEmailAndPassword(String username, String email,
   } catch (e) {
     print(e);
   }
-  // return _userFromFirebase(authResult.user);
 }
 
 Future<void> sendPasswordResetEmail(String email) async {
   await _fireAuth.sendPasswordResetEmail(email: email);
 }
 
-Future<void> signOut() async {
-  return _fireAuth.signOut();
+Future<void> signOut(BuildContext context) async {
+  try {
+    await _fireAuth.signOut();
+    FirebaseAuth.instance.authStateChanges().listen((User user) {
+      if (user == null) {
+        Navigator.of(context).pushNamed(AppRoutes.landingPage);
+        print('Navigated');
+      } else {
+        print('GG');
+      }
+    });
+    print('Success');
+  } catch (e) {
+    print(e);
+  }
 }
 
 void dispose() {}

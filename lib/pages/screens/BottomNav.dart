@@ -21,68 +21,91 @@ class _BottomNavState extends State<BottomNav> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(
-      //   automaticallyImplyLeading: false,
-      //   title: Text("BigDeal"),
-      //   backgroundColor: Colors.white,
-      //   actions: <Widget>[
-      //     IconButton(
-      //       icon: Icon(Icons.search_outlined),
-      //       onPressed: () {
-      //         showSearch(context: context, delegate: SearchBar());
-      //       },
-      //     ),
-      //   ],
-      // ),
-      body: PageView(
-        controller: _pageController,
-        children: _pageOptions,
-        onPageChanged: _onItemTapped,
-        physics: ClampingScrollPhysics(),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        fixedColor: Colors.black,
-        type: BottomNavigationBarType.fixed,
-        unselectedItemColor: Colors.grey[600],
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-          _pageController.jumpToPage(_currentIndex);
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search_outlined),
-            activeIcon: Icon(Icons.search_rounded),
-            label: 'Explore',
+  Future<bool> onWillPop() async {
+    final shouldPop = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Are you sure?'),
+        content: Text('Do you want to leave?'),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('No'),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.article_outlined),
-            activeIcon: Icon(Icons.article_rounded),
-            label: 'News',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore_outlined),
-            activeIcon: Icon(Icons.explore_rounded),
-            label: 'Nearby',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.build_outlined),
-            activeIcon: Icon(Icons.build_rounded),
-            label: 'Tools',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle_outlined),
-            activeIcon: Icon(Icons.account_circle_rounded),
-            label: 'Profile',
+          FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('Yes'),
           ),
         ],
       ),
     );
+    return shouldPop ?? false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+        onWillPop: onWillPop,
+        child: Scaffold(
+          // appBar: AppBar(
+          //   automaticallyImplyLeading: false,
+          //   title: Text("BigDeal"),
+          //   backgroundColor: Colors.white,
+          //   actions: <Widget>[
+          //     IconButton(
+          //       icon: Icon(Icons.search_outlined),
+          //       onPressed: () {
+          //         showSearch(context: context, delegate: SearchBar());
+          //       },
+          //     ),
+          //   ],
+          // ),
+          body: PageView(
+            controller: _pageController,
+            children: _pageOptions,
+            onPageChanged: _onItemTapped,
+            physics: ClampingScrollPhysics(),
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _currentIndex,
+            fixedColor: Colors.black,
+            type: BottomNavigationBarType.fixed,
+            unselectedItemColor: Colors.grey[600],
+            onTap: (index) {
+              setState(() {
+                _currentIndex = index;
+              });
+              _pageController.jumpToPage(_currentIndex);
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.search_outlined),
+                activeIcon: Icon(Icons.search_rounded),
+                label: 'Explore',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.article_outlined),
+                activeIcon: Icon(Icons.article_rounded),
+                label: 'News',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.explore_outlined),
+                activeIcon: Icon(Icons.explore_rounded),
+                label: 'Nearby',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.build_outlined),
+                activeIcon: Icon(Icons.build_rounded),
+                label: 'Tools',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.account_circle_outlined),
+                activeIcon: Icon(Icons.account_circle_rounded),
+                label: 'Profile',
+              ),
+            ],
+          ),
+        ));
   }
 }
 
