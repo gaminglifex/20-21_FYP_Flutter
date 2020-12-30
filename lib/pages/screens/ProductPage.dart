@@ -1,11 +1,24 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-// import 'package:fyp_uiprototype/pages/screens/GoogleMap.dart';
+import 'package:fyp_uiprototype/pages/screens/GoogleMap.dart';
 import 'package:get/get.dart';
 
 class ProductPage extends StatefulWidget {
-  // final String productId;
-  // ProductPage({this.productId});
+  final String restaurantId;
+  final String restaurantName;
+  final String restaurantAddress;
+  final double latitude;
+  final double longitude;
+  final String gmap;
+  final String image;
+  ProductPage(
+      {this.restaurantId,
+      this.restaurantName,
+      this.restaurantAddress,
+      this.latitude,
+      this.longitude,
+      this.gmap,
+      this.image});
 
   @override
   _ProductPageState createState() => _ProductPageState();
@@ -38,7 +51,7 @@ class _ProductPageState extends State<ProductPage> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: NetworkImage(Get.arguments['image']),
+                          image: NetworkImage(widget.image),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -129,7 +142,18 @@ class _ProductPageState extends State<ProductPage> {
                     child: ListTile(
                       leading: Icon(Icons.location_on),
                       trailing: Icon(Icons.arrow_forward_ios),
-                      title: Text(Get.arguments['address']),
+                      title: Text(widget.restaurantAddress),
+                      onTap: () {
+                        Get.to(
+                          MapSample(
+                              restaurantId: widget.restaurantId,
+                              restaurantName: widget.restaurantName,
+                              restaurantAddress: widget.restaurantAddress,
+                              latitude: widget.latitude,
+                              longitude: widget.longitude,
+                              gmap: widget.gmap),
+                        );
+                      },
                     ),
                   ),
                 ],

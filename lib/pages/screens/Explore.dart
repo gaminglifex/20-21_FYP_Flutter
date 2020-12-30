@@ -81,10 +81,26 @@ class _ExploreState extends State<Explore> {
                             return GestureDetector(
                               onTap: () {
                                 Get.to(
-                                  ProductPage(),
+                                  ProductPage(
+                                      restaurantId:
+                                          snapshot.data[index].data()['id'],
+                                      restaurantName:
+                                          snapshot.data[index].data()['name'],
+                                      restaurantAddress: snapshot.data[index]
+                                          .data()['address'],
+                                      latitude: snapshot.data[index]
+                                          .data()['location']
+                                          .latitude,
+                                      longitude: snapshot.data[index]
+                                          .data()['location']
+                                          .longitude,
+                                      gmap: snapshot.data[index].data()['gmap'],
+                                      image:
+                                          snapshot.data[index].data()['image']),
                                   transition: Transition.leftToRightWithFade,
                                   arguments: snapshot.data[index],
                                 );
+                                print(snapshot.data[index]);
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
