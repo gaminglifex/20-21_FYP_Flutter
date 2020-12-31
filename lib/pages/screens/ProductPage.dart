@@ -60,7 +60,7 @@ class _ProductPageState extends State<ProductPage> {
                       padding: const EdgeInsets.only(
                           left: 8.0, top: 8.0, bottom: 8.0),
                       child: Text(
-                        Get.arguments['name'],
+                        widget.restaurantName,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 30.0,

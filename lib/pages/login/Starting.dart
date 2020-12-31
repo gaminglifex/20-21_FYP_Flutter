@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fyp_uiprototype/common_widget/AppRoutes.dart';
+import 'package:get/get.dart';
 
 class Starting extends StatefulWidget {
   @override
@@ -25,7 +25,8 @@ class _StartingState extends State<Starting> {
               fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.bold),
         ),
         onPressed: () {
-          Navigator.of(context).pushNamed(AppRoutes.authLogin);
+          // Navigator.of(context).pushNamed(AppRoutes.authLogin);
+          Get.toNamed('/authLogin');
         },
       ),
     );
@@ -44,7 +45,7 @@ class _StartingState extends State<Starting> {
               fontSize: 20.0, color: Colors.black, fontWeight: FontWeight.bold),
         ),
         onPressed: () {
-          Navigator.of(context).pushNamed(AppRoutes.authRegister);
+          Get.toNamed('/authRegister');
         },
       ),
     );

@@ -20,11 +20,13 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Prototype',
+      getPages: AppRoutes.pages,
+      initialRoute: '/landingPage',
       theme: ThemeData(
         primarySwatch: Colors.cyan,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      routes: AppRoutes.define(),
+      // routes: AppRoutes.define(),
       home: LandingPage(),
     );
   }

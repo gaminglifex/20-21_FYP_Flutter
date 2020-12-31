@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:flutter/material.dart';
-import 'package:fyp_uiprototype/common_widget/AppRoutes.dart';
+import 'package:get/get.dart';
 import 'package:fyp_uiprototype/common_widget/alert_dialog.dart';
 
 final FirebaseAuth _fireAuth = FirebaseAuth.instance;
@@ -34,7 +34,7 @@ Future<void> signInWithEmailAndPassword(
       // return BottomNav();
       AlertDialogBuilder.loadingBuilder(context);
       Future.delayed(Duration(seconds: 2), () {
-        Navigator.of(context).pushNamed(AppRoutes.homePage);
+        Get.offAllNamed('/');
       });
       // Navigator.of(context).pushNamed(AppRoutes.homePage);
     }
@@ -88,7 +88,7 @@ Future<void> createUserWithEmailAndPassword(String username, String email,
       return null;
     } else {
       // return BottomNav();
-      Navigator.of(context).pushNamed(AppRoutes.homePage);
+      Get.offAllNamed('/');
     }
   } on FirebaseAuthException catch (e) {
     if (e.code == 'weak-password') {
@@ -110,7 +110,7 @@ Future<void> signOut(BuildContext context) async {
     await _fireAuth.signOut();
     FirebaseAuth.instance.authStateChanges().listen((User user) {
       if (user == null) {
-        Navigator.of(context).pushNamed(AppRoutes.landingPage);
+        Get.offAllNamed('/landingPage');
         print('Navigated');
       } else {
         print('GG');

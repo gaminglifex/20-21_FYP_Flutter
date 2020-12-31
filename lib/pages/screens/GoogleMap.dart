@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
@@ -27,6 +28,7 @@ class MapSampleState extends State<MapSample> {
   //     FirebaseFirestore.instance.collection('restaurant');
   final Set<Marker> _markers = {};
   GoogleMapController _mapController;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
@@ -51,12 +53,28 @@ class MapSampleState extends State<MapSample> {
   }
 
   void _launchUrl(String launchUrl) async {
-    if (await canLaunch(launchUrl)) {
-      await launch(launchUrl);
+    String temp = launchUrl.replaceAll(RegExp(',\s*'), '+');
+    print("$temp");
+    final mapUrl = "https://www.google.com/maps/search/?api=1&query=$temp";
+    if (await canLaunch(mapUrl)) {
+      await launch(mapUrl);
     } else {
       throw 'Could not open url';
     }
   }
+
+  // _snackBar(BuildContext context) async {
+  //   Scaffold.of(context).showSnackBar(
+  //     SnackBar(
+  //       content: Text('Copied to Clipboard'),
+  //       action: SnackBarAction(
+  //         label: 'Undo',
+  //         onPressed: () {},
+  //       ),
+  //       duration: Duration(seconds: 1),
+  //     ),
+  //   );
+  // }
 
   // _goToGoogleMap() {
   //   print('Clicked');
@@ -72,6 +90,7 @@ class MapSampleState extends State<MapSample> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: true,
         backgroundColor: Colors.white,
@@ -97,11 +116,91 @@ class MapSampleState extends State<MapSample> {
                   children: [
                     FloatingActionButton(
                       onPressed: () {
-                        _launchUrl(widget.gmap);
+                        _launchUrl(widget.restaurantAddress);
                       },
                       child: Icon(Icons.map),
                       backgroundColor: Colors.white,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 20.0,
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Align(
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width - 80,
+                      height: 100,
+                      child: Card(
+                        elevation: 8.0,
+                        color: Colors.white,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(14.0))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(widget.restaurantAddress),
+                              ),
+                            ),
+                            VerticalDivider(
+                              color: Colors.grey,
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                // Clipboard.setData(ClipboardData(
+                                //         text: widget.restaurantAddress))
+                                //     .then((result) {
+                                //   _scaffoldKey.currentState.showSnackBar(
+                                //     SnackBar(
+                                //       content: Text('Copied to Clipboard'),
+                                //       duration: Duration(seconds: 1),
+                                //     ),
+                                //   );
+                                // });
+                                Clipboard.setData(ClipboardData(
+                                        text: widget.restaurantAddress))
+                                    .then((result) {
+                                  Get.snackbar(
+                                    '',
+                                    '',
+                                    titleText: Text(
+                                      'Messages',
+                                      style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    messageText: Text(
+                                      'Copied to Clipboardss',
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    snackPosition: SnackPosition.TOP,
+                                    backgroundColor:
+                                        Colors.white.withOpacity(0.7),
+                                    animationDuration:
+                                        Duration(milliseconds: 500),
+                                    duration: Duration(milliseconds: 1000),
+                                  );
+                                });
+                              },
+                              child: Icon(Icons.content_copy),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),

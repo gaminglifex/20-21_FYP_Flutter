@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fyp_uiprototype/common_widget/AppRoutes.dart';
+import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fyp_uiprototype/common_widget/alert_dialog.dart';
 import 'package:fyp_uiprototype/auth_service/FirebaseAuthService.dart';
@@ -283,7 +283,7 @@ class _RegisterState extends State<Register> {
                     ),
               ),
               onPressed: () {
-                Navigator.of(context).pushNamed(AppRoutes.authLogin);
+                Get.toNamed('/authLogin');
               },
             ),
           ],
