@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:fyp_uiprototype/common_widget/alert_dialog.dart';
 
 final FirebaseAuth _fireAuth = FirebaseAuth.instance;
+final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
 //  CustUser _userFromFirebase(User user) {
 //   if (user == null) {
@@ -78,7 +79,8 @@ Future<void> createUserWithEmailAndPassword(String username, String email,
     UserCredential userCredential = await _fireAuth
         .createUserWithEmailAndPassword(email: email, password: password);
     User user = userCredential.user;
-    await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+    await _fireStore.collection('users').doc(user.uid).set({
+      'id': user.uid,
       'username': username,
       'email': email,
       'password': password,
@@ -120,6 +122,13 @@ Future<void> signOut(BuildContext context) async {
   } catch (e) {
     print(e);
   }
+}
+
+Future<void> addtoWishlist(String storeId) async {
+  print(storeId);
+  // var arrdata = Map();
+  // arrdata =
+  //     await _fireStore.collection('user').doc(storeId).get();
 }
 
 void dispose() {}

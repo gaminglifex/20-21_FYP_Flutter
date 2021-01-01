@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_uiprototype/pages/screens/GoogleMap.dart';
 import 'package:get/get.dart';
+import 'package:share/share.dart';
+import 'package:fyp_uiprototype/auth_service/FirebaseAuthService.dart';
 
 class ProductPage extends StatefulWidget {
   final String restaurantId;
@@ -27,6 +29,7 @@ class ProductPage extends StatefulWidget {
 class _ProductPageState extends State<ProductPage> {
   // final CollectionReference _restaurantRef =
   //     FirebaseFirestore.instance.collection("restaurant");
+  bool _wishlistState = false;
 
   @override
   Widget build(BuildContext context) {
@@ -57,15 +60,58 @@ class _ProductPageState extends State<ProductPage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8.0, top: 8.0, bottom: 8.0),
-                      child: Text(
-                        widget.restaurantName,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      padding: const EdgeInsets.all(4.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              widget.restaurantName,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 30.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: ButtonTheme(
+                              minWidth: 30.0,
+                              height: 30.0,
+                              child: MaterialButton(
+                                onPressed: () {
+                                  Share.share(
+                                      "${widget.restaurantName} \n ${widget.restaurantAddress}");
+                                },
+                                child: Icon(
+                                  Icons.share,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: ButtonTheme(
+                              minWidth: 30.0,
+                              height: 30.0,
+                              child: MaterialButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _wishlistState = !_wishlistState;
+                                  });
+                                  addtoWishlist(widget.restaurantId);
+                                },
+                                child: Icon(
+                                  _wishlistState
+                                      ? Icons.turned_in
+                                      : Icons.bookmark_border,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

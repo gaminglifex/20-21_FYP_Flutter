@@ -181,7 +181,7 @@ class MapSampleState extends State<MapSample> {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     messageText: Text(
-                                      'Copied to Clipboardss',
+                                      'Copied to Clipboard',
                                       style: TextStyle(
                                         fontSize: 14.0,
                                         fontWeight: FontWeight.bold,
