@@ -82,7 +82,6 @@ class MapSampleState extends State<MapSample> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     showInfo();
   }
@@ -187,9 +186,9 @@ class MapSampleState extends State<MapSample> {
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    snackPosition: SnackPosition.TOP,
+                                    snackPosition: SnackPosition.BOTTOM,
                                     backgroundColor:
-                                        Colors.white.withOpacity(0.7),
+                                        Colors.grey[300].withOpacity(0.5),
                                     animationDuration:
                                         Duration(milliseconds: 500),
                                     duration: Duration(milliseconds: 1000),

@@ -1,4 +1,5 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp_uiprototype/pages/screens/GoogleMap.dart';
 import 'package:get/get.dart';
@@ -30,6 +31,27 @@ class _ProductPageState extends State<ProductPage> {
   // final CollectionReference _restaurantRef =
   //     FirebaseFirestore.instance.collection("restaurant");
   bool _wishlistState = false;
+  final userId = currentUserId();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //check Wishlist
+    void check() async {
+      await productCheckWishlist(userId, widget.restaurantId).then((value) {
+        print(value);
+        if (value == true) {
+          setState(() {
+            _wishlistState = true;
+          });
+        } else if (value == false) {
+          _wishlistState = false;
+        }
+      });
+    }
+
+    check();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +103,7 @@ class _ProductPageState extends State<ProductPage> {
                               child: MaterialButton(
                                 onPressed: () {
                                   Share.share(
-                                      "${widget.restaurantName} \n ${widget.restaurantAddress}");
+                                      "${widget.restaurantName}\n${widget.restaurantAddress}");
                                 },
                                 child: Icon(
                                   Icons.share,
@@ -97,10 +119,67 @@ class _ProductPageState extends State<ProductPage> {
                               height: 30.0,
                               child: MaterialButton(
                                 onPressed: () {
+                                  if (_wishlistState != true) {
+                                    addtoWishlist(userId, widget.restaurantId)
+                                        .whenComplete(() => Get.snackbar(
+                                              '',
+                                              '',
+                                              titleText: Text(
+                                                'Messages',
+                                                style: TextStyle(
+                                                    fontSize: 20.0,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              messageText: Text(
+                                                'Added to Wishlist',
+                                                style: TextStyle(
+                                                  fontSize: 14.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              snackPosition:
+                                                  SnackPosition.BOTTOM,
+                                              backgroundColor: Colors.grey[300]
+                                                  .withOpacity(0.7),
+                                              animationDuration:
+                                                  Duration(milliseconds: 500),
+                                              duration:
+                                                  Duration(milliseconds: 1000),
+                                            ));
+                                  } else if (_wishlistState == true) {
+                                    deletefromWishlist(
+                                            userId, widget.restaurantId)
+                                        .whenComplete(() => Get.snackbar(
+                                              '',
+                                              '',
+                                              titleText: Text(
+                                                'Messages',
+                                                style: TextStyle(
+                                                    fontSize: 20.0,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              messageText: Text(
+                                                'Deleted from Wishlist',
+                                                style: TextStyle(
+                                                  fontSize: 14.0,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              snackPosition:
+                                                  SnackPosition.BOTTOM,
+                                              backgroundColor: Colors.grey[300]
+                                                  .withOpacity(0.5),
+                                              animationDuration:
+                                                  Duration(milliseconds: 500),
+                                              duration:
+                                                  Duration(milliseconds: 1000),
+                                            ));
+                                  }
                                   setState(() {
                                     _wishlistState = !_wishlistState;
                                   });
-                                  addtoWishlist(widget.restaurantId);
                                 },
                                 child: Icon(
                                   _wishlistState

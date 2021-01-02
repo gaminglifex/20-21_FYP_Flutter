@@ -8,6 +8,14 @@ class DataController extends GetxController {
     return snapshot.docs;
   }
 
+  // Future getDocId(String collection) async {
+  //   DocumentReference refid =
+  //       FirebaseFirestore.instance.collection(collection).doc();
+  //   DocumentSnapshot snapid = await refid.get();
+  //   var snapped = snapid.reference.id;
+  //   return snapped;
+  // }
+
   @override
   void onInit() {
     super.onInit();

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:fyp_uiprototype/common_widget/alert_dialog.dart';
 
 final FirebaseAuth _fireAuth = FirebaseAuth.instance;
+final _currentUser = _fireAuth.currentUser;
 final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
 //  CustUser _userFromFirebase(User user) {
@@ -23,9 +26,14 @@ Stream<User> get authStateChanges {
   return _fireAuth.authStateChanges();
 }
 
+String currentUserId() {
+  return _currentUser.uid;
+}
+
 Future<void> signInWithEmailAndPassword(
     String email, String password, BuildContext context) async {
   try {
+    // ignore: unused_local_variable
     final UserCredential authResult = await _fireAuth.signInWithCredential(
         EmailAuthProvider.credential(email: email, password: password));
     if (authStateChanges == null) {
@@ -124,11 +132,104 @@ Future<void> signOut(BuildContext context) async {
   }
 }
 
-Future<void> addtoWishlist(String storeId) async {
-  print(storeId);
-  // var arrdata = Map();
-  // arrdata =
-  //     await _fireStore.collection('user').doc(storeId).get();
+Future<void> addtoWishlist(String userId, String storeId) async {
+  // final DocumentReference _checkfield =
+  //     _fireStore.collection('user').doc(_currentUser.uid);
+  final DocumentSnapshot _snapfield =
+      await _fireStore.collection('users').doc(_currentUser.uid).get();
+  if (_snapfield.data()['wishlist'] == null) {
+    _fireStore.collection('users').doc(_currentUser.uid).set({
+      'wishlist': [storeId]
+    }, SetOptions(merge: true));
+    print('it is null!');
+  } else if (_snapfield.data()['wishlist'] != null) {
+    _fireStore.collection('users').doc(_currentUser.uid).update({
+      'wishlist': FieldValue.arrayUnion([storeId]),
+    });
+    print('it is not null!');
+  }
+  print("The is the store Id! $storeId");
+}
+
+Future<void> deletefromWishlist(String userId, String storeId) async {
+  final DocumentSnapshot _snapfield =
+      await _fireStore.collection('users').doc(_currentUser.uid).get();
+  for (var i in _snapfield.data()['wishlist']) {
+    if (i == storeId) {
+      _fireStore.collection('users').doc(_currentUser.uid).update({
+        'wishlist': FieldValue.arrayRemove([i]),
+      });
+    }
+  }
+  // _snapfield.data()['wishlist'].forEach((store) {
+  //   print(store);
+  //   if (store == storeId) {
+  //     _fireStore.collection('users').doc(_currentUser.uid).update({
+  //       'wishlist': FieldValue.arrayRemove([store]),
+  //     });
+  //   }
+  // });
+  print("The is the store Id! $storeId");
+}
+
+Future<dynamic> productCheckWishlist(String userId, String storeId) async {
+  final DocumentSnapshot _snapfield =
+      await _fireStore.collection('users').doc(_currentUser.uid).get();
+  bool flag = true;
+  // final arrData = _snapfield.data()['wishlist'];
+  // return (arrData);
+  if (_snapfield.data()['wishlist'] == null ||
+      _snapfield.data()['wishlist'].isEmpty) {
+    flag = false;
+  } else if (!_snapfield.data()['wishlist'].isEmpty) {
+    for (var i in _snapfield.data()['wishlist']) {
+      if (i == storeId) {
+        flag = true;
+        break;
+      } else if (i != storeId) {
+        flag = false;
+      }
+    }
+  }
+  // for (var i in _snapfield.data()['wishlist']) {
+  //   print("This is shit $i");
+  //   // if (i == storeId) {
+  //   //   flag = true;
+  //   // } else if (i != storeId) {
+  //   //   flag = false;
+  //   // }
+  // }
+  return flag;
+  // _snapfield.data()['wishlist'].forEach((store) {
+  //   print(store);
+  //   if (store == storeId) {
+  //     _fireStore.collection('users').doc(_currentUser.uid).update({
+  //       'wishlist': FieldValue.arrayRemove([store]),
+  //     });
+  //   }
+  // });
+}
+
+Future<dynamic> userCheckWishlist(String userId) async {
+  final DocumentSnapshot _snapfield =
+      await _fireStore.collection('users').doc(_currentUser.uid).get();
+  bool flag = true;
+  // final arrData = _snapfield.data()['wishlist'];
+  // return (arrData);
+  if (_snapfield.data()['wishlist'] == null ||
+      _snapfield.data()['wishlist'].isEmpty) {
+    flag = false;
+  } else if (!_snapfield.data()['wishlist'].isEmpty) {
+    flag = true;
+  }
+  return flag;
+}
+
+Future<dynamic> getWishlist(String userId) async {
+  final DocumentSnapshot _snapfield =
+      await _fireStore.collection('users').doc(_currentUser.uid).get();
+  final arrData = _snapfield.data()['wishlist'];
+  return arrData;
 }
 
 void dispose() {}
