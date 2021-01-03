@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Prototype',
       getPages: AppRoutes.pages,
-      initialRoute: '/landingPage',
+      initialRoute: '/SplashScreen',
       theme: ThemeData(
         primarySwatch: Colors.cyan,
         visualDensity: VisualDensity.adaptivePlatformDensity,

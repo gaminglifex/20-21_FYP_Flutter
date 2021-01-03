@@ -5,6 +5,7 @@ import 'package:fyp_uiprototype/pages/screens/GoogleMap.dart';
 import 'package:get/get.dart';
 import 'package:share/share.dart';
 import 'package:fyp_uiprototype/auth_service/FirebaseAuthService.dart';
+import 'package:fyp_uiprototype/common_widget/alert_dialog.dart';
 
 class ProductPage extends StatefulWidget {
   final String restaurantId;
@@ -121,61 +122,17 @@ class _ProductPageState extends State<ProductPage> {
                                 onPressed: () {
                                   if (_wishlistState != true) {
                                     addtoWishlist(userId, widget.restaurantId)
-                                        .whenComplete(() => Get.snackbar(
-                                              '',
-                                              '',
-                                              titleText: Text(
-                                                'Messages',
-                                                style: TextStyle(
-                                                    fontSize: 20.0,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              messageText: Text(
-                                                'Added to Wishlist',
-                                                style: TextStyle(
-                                                  fontSize: 14.0,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              snackPosition:
-                                                  SnackPosition.BOTTOM,
-                                              backgroundColor: Colors.grey[300]
-                                                  .withOpacity(0.7),
-                                              animationDuration:
-                                                  Duration(milliseconds: 500),
-                                              duration:
-                                                  Duration(milliseconds: 1000),
-                                            ));
+                                        .whenComplete(() =>
+                                            AlertDialogBuilder.showSnackbar(
+                                                'Message',
+                                                'Added to Wishlist'));
                                   } else if (_wishlistState == true) {
                                     deletefromWishlist(
                                             userId, widget.restaurantId)
-                                        .whenComplete(() => Get.snackbar(
-                                              '',
-                                              '',
-                                              titleText: Text(
-                                                'Messages',
-                                                style: TextStyle(
-                                                    fontSize: 20.0,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              messageText: Text(
-                                                'Deleted from Wishlist',
-                                                style: TextStyle(
-                                                  fontSize: 14.0,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              snackPosition:
-                                                  SnackPosition.BOTTOM,
-                                              backgroundColor: Colors.grey[300]
-                                                  .withOpacity(0.5),
-                                              animationDuration:
-                                                  Duration(milliseconds: 500),
-                                              duration:
-                                                  Duration(milliseconds: 1000),
-                                            ));
+                                        .whenComplete(() =>
+                                            AlertDialogBuilder.showSnackbar(
+                                                'Message',
+                                                'Deleted from Wishlist'));
                                   }
                                   setState(() {
                                     _wishlistState = !_wishlistState;

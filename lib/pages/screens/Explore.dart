@@ -45,6 +45,11 @@ class _ExploreState extends State<Explore> {
                     BoxShadow(color: Colors.black),
                   ],
                   //TODO: image
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(
+                        "https://firebasestorage.googleapis.com/v0/b/eietest2020.appspot.com/o/Banner.jpg?alt=media&token=6e1c217e-234e-4515-bbff-67cfa922e52b"),
+                  ),
                 ),
               ),
             ),

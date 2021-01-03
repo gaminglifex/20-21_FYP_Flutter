@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AlertDialogBuilder {
   final String description;
@@ -64,6 +64,29 @@ class AlertDialogBuilder {
     );
   }
 
+  static void showSnackbar(String title, String message) {
+    return Get.snackbar(
+      '',
+      '',
+      titleText: Text(
+        title,
+        style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+      ),
+      messageText: Text(
+        message,
+        style: TextStyle(
+          fontSize: 14.0,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.grey[100].withOpacity(1),
+      leftBarIndicatorColor: Colors.green,
+      snackStyle: SnackStyle.GROUNDED,
+      animationDuration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 1000),
+    );
+  }
 /*   static Future<bool> _onBackPressed(BuildContext context) {
     return showDialog(
       context: context, 

@@ -3,6 +3,7 @@ import 'package:fyp_uiprototype/pages/login/Landing.dart';
 import 'package:fyp_uiprototype/pages/login/Login.dart';
 import 'package:fyp_uiprototype/pages/login/Register.dart';
 import 'package:fyp_uiprototype/pages/screens/BottomNav.dart';
+import 'package:fyp_uiprototype/pages/login/SplashScreen.dart';
 
 class AppRoutes {
   static final pages = [
@@ -10,5 +11,11 @@ class AppRoutes {
     GetPage(name: '/authLogin', page: () => Login()),
     GetPage(name: '/authRegister', page: () => Register()),
     GetPage(name: '/landingPage', page: () => LandingPage()),
+    GetPage(
+      name: '/SplashScreen',
+      page: () => SplashScreen(),
+      transition: Transition.rightToLeftWithFade,
+      transitionDuration: Duration(milliseconds: 3000),
+    ),
   ];
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:fyp_uiprototype/common_widget/alert_dialog.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MapSample extends StatefulWidget {
@@ -170,29 +170,8 @@ class MapSampleState extends State<MapSample> {
                                 Clipboard.setData(ClipboardData(
                                         text: widget.restaurantAddress))
                                     .then((result) {
-                                  Get.snackbar(
-                                    '',
-                                    '',
-                                    titleText: Text(
-                                      'Messages',
-                                      style: TextStyle(
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    messageText: Text(
-                                      'Copied to Clipboard',
-                                      style: TextStyle(
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    snackPosition: SnackPosition.BOTTOM,
-                                    backgroundColor:
-                                        Colors.grey[300].withOpacity(0.5),
-                                    animationDuration:
-                                        Duration(milliseconds: 500),
-                                    duration: Duration(milliseconds: 1000),
-                                  );
+                                  AlertDialogBuilder.showSnackbar(
+                                      'Message', 'Added to Wishlist');
                                 });
                               },
                               child: Icon(Icons.content_copy),
