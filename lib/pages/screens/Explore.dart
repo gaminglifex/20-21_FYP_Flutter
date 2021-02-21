@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fyp_uiprototype/common_widget/dataController.dart';
 import 'package:get/get.dart';
 import 'package:fyp_uiprototype/pages/screens/ProductPage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class Explore extends StatefulWidget {
   @override
@@ -17,13 +19,14 @@ class _ExploreState extends State<Explore> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("BigDeal"),
+        title: Text("BIG DEAL"),
         backgroundColor: Colors.white,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search_outlined),
             onPressed: () {
-              showSearch(context: context, delegate: SearchBar());
+              //showSearch(context: context, delegate: SearchBar());
+              Get.toNamed('/Search');
             },
           ),
         ],
@@ -87,21 +90,26 @@ class _ExploreState extends State<Explore> {
                               onTap: () {
                                 Get.to(
                                   ProductPage(
-                                      restaurantId:
-                                          snapshot.data[index].data()['id'],
-                                      restaurantName:
-                                          snapshot.data[index].data()['name'],
-                                      restaurantAddress: snapshot.data[index]
-                                          .data()['address'],
-                                      latitude: snapshot.data[index]
-                                          .data()['location']
-                                          .latitude,
-                                      longitude: snapshot.data[index]
-                                          .data()['location']
-                                          .longitude,
-                                      gmap: snapshot.data[index].data()['gmap'],
-                                      image:
-                                          snapshot.data[index].data()['image']),
+                                    restaurantId:
+                                        snapshot.data[index].data()['id'],
+                                    restaurantName:
+                                        snapshot.data[index].data()['name'],
+                                    restaurantAddress:
+                                        snapshot.data[index].data()['address'],
+                                    latitude: snapshot.data[index]
+                                        .data()['location']
+                                        .latitude,
+                                    longitude: snapshot.data[index]
+                                        .data()['location']
+                                        .longitude,
+                                    gmap: snapshot.data[index].data()['gmap'],
+                                    image: snapshot.data[index].data()['image'],
+                                    link: snapshot.data[index].data()['link'],
+                                    source:
+                                        snapshot.data[index].data()['source'],
+                                    rating:
+                                        snapshot.data[index].data()['rating'],
+                                  ),
                                   transition: Transition.leftToRightWithFade,
                                   arguments: snapshot.data[index],
                                 );
@@ -135,9 +143,56 @@ class _ExploreState extends State<Explore> {
                                               BoxConstraints(maxWidth: 200.0),
                                           child: Text(
                                             snapshot.data[index].data()['name'],
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            softWrap: false,
                                             style: TextStyle(
                                               color: Colors.black,
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w500,
                                             ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 3.0),
+                                        child: Container(
+                                          constraints:
+                                              BoxConstraints(maxWidth: 200.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                '@' +
+                                                    snapshot.data[index]
+                                                        .data()['source'],
+                                              ),
+                                              RatingBar.builder(
+                                                initialRating: double.parse(
+                                                    snapshot.data[index]
+                                                        .data()['rating']),
+                                                minRating: 1,
+                                                direction: Axis.horizontal,
+                                                allowHalfRating: true,
+                                                itemCount: 5,
+                                                itemSize: 16.0,
+                                                itemPadding:
+                                                    EdgeInsets.symmetric(
+                                                        horizontal: 1.0),
+                                                itemBuilder: (context, _) =>
+                                                    Icon(
+                                                  Icons.star,
+                                                  color: Colors.amber,
+                                                ),
+                                                onRatingUpdate: (rating) {
+                                                  print(rating);
+                                                },
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
@@ -160,10 +215,13 @@ class _ExploreState extends State<Explore> {
     );
   }
 }
-
+/*
 class SearchBar extends SearchDelegate<String> {
-  String searchHint = 'Find your deals here';
+  final TextEditingController searchController = TextEditingController();
+  QuerySnapshot snapshotData;
+  bool isExecuted = false;
 
+  String searchHint = 'Find your deals here';
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -234,3 +292,4 @@ class SearchBar extends SearchDelegate<String> {
     );
   }
 }
+*/

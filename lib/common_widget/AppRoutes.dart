@@ -4,6 +4,7 @@ import 'package:fyp_uiprototype/pages/login/Login.dart';
 import 'package:fyp_uiprototype/pages/login/Register.dart';
 import 'package:fyp_uiprototype/pages/screens/BottomNav.dart';
 import 'package:fyp_uiprototype/pages/login/SplashScreen.dart';
+import 'package:fyp_uiprototype/common_widget/Search.dart';
 
 class AppRoutes {
   static final pages = [
@@ -11,6 +12,7 @@ class AppRoutes {
     GetPage(name: '/authLogin', page: () => Login()),
     GetPage(name: '/authRegister', page: () => Register()),
     GetPage(name: '/landingPage', page: () => LandingPage()),
+    GetPage(name: '/Search', page: () => Search()),
     GetPage(
       name: '/SplashScreen',
       page: () => SplashScreen(),

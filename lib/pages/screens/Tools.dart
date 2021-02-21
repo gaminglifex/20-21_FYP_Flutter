@@ -91,22 +91,26 @@ class _ToolsState extends State<Tools> {
                         onTap: () {
                           Get.to(
                             ProductPage(
-                                restaurantId:
-                                    snapshot.data[arrList[index]].data()['id'],
-                                restaurantName: snapshot.data[arrList[index]]
-                                    .data()['name'],
-                                restaurantAddress: snapshot.data[arrList[index]]
-                                    .data()['address'],
-                                latitude: snapshot.data[arrList[index]]
-                                    .data()['location']
-                                    .latitude,
-                                longitude: snapshot.data[arrList[index]]
-                                    .data()['location']
-                                    .longitude,
-                                gmap: snapshot.data[arrList[index]]
-                                    .data()['gmap'],
-                                image: snapshot.data[arrList[index]]
-                                    .data()['image']),
+                              restaurantId:
+                                  snapshot.data[arrList[index]].data()['id'],
+                              restaurantName:
+                                  snapshot.data[arrList[index]].data()['name'],
+                              restaurantAddress: snapshot.data[arrList[index]]
+                                  .data()['address'],
+                              latitude: snapshot.data[arrList[index]]
+                                  .data()['location']
+                                  .latitude,
+                              longitude: snapshot.data[arrList[index]]
+                                  .data()['location']
+                                  .longitude,
+                              gmap:
+                                  snapshot.data[arrList[index]].data()['gmap'],
+                              image:
+                                  snapshot.data[arrList[index]].data()['image'],
+                              link: snapshot.data[index].data()['link'],
+                              source: snapshot.data[index].data()['source'],
+                              rating: snapshot.data[index].data()['rating'],
+                            ),
                             transition: Transition.leftToRightWithFade,
                             arguments: snapshot.data[arrList[index]],
                           );

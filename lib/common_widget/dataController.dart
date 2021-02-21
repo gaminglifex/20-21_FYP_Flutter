@@ -8,6 +8,20 @@ class DataController extends GetxController {
     return snapshot.docs;
   }
 
+  // Future queryData(String queryString) async {
+  //   return FirebaseFirestore.instance
+  //       .collection('restaurant')
+  //       .where('type', isEqualTo: queryString)
+  //       .get();
+  // }
+
+  Future queryData(String queryString) async {
+    return FirebaseFirestore.instance
+        .collection('restaurant')
+        .orderBy('name')
+        .startAt([queryString]).endAt([queryString + '\uf8ff']).get();
+  }
+
   // Future getDocId(String collection) async {
   //   DocumentReference refid =
   //       FirebaseFirestore.instance.collection(collection).doc();
