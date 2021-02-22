@@ -42,6 +42,7 @@ class _ProductPageState extends State<ProductPage> {
   //     FirebaseFirestore.instance.collection("restaurant");
 
   bool _wishlistState = false;
+  bool _pricetrackerState = false;
   final userId = currentUserId();
 
   void _launchUrl(String launchUrl) async {
@@ -73,7 +74,21 @@ class _ProductPageState extends State<ProductPage> {
       });
     }
 
+    void check2() async {
+      await productCheckPriceTracker(userId, widget.restaurantId).then((value) {
+        print(value);
+        if (value == true) {
+          setState(() {
+            _pricetrackerState = true;
+          });
+        } else if (value == false) {
+          _pricetrackerState = false;
+        }
+      });
+    }
+
     check();
+    check2();
   }
 
   @override
@@ -141,7 +156,7 @@ class _ProductPageState extends State<ProductPage> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(4.0),
+                            padding: const EdgeInsets.all(2.0),
                             child: ButtonTheme(
                               minWidth: 30.0,
                               height: 30.0,
@@ -158,7 +173,7 @@ class _ProductPageState extends State<ProductPage> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(4.0),
+                            padding: const EdgeInsets.all(2.0),
                             child: ButtonTheme(
                               minWidth: 30.0,
                               height: 30.0,
@@ -186,6 +201,41 @@ class _ProductPageState extends State<ProductPage> {
                                   _wishlistState
                                       ? Icons.turned_in
                                       : Icons.bookmark_border,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: ButtonTheme(
+                              minWidth: 30.0,
+                              height: 30.0,
+                              child: MaterialButton(
+                                onPressed: () {
+                                  if (_pricetrackerState != true) {
+                                    addtoPriceTracker(
+                                            userId, widget.restaurantId)
+                                        .whenComplete(() =>
+                                            AlertDialogBuilder.showSnackbar(
+                                                'Message',
+                                                'Added to PriceTracker'));
+                                  } else if (_pricetrackerState == true) {
+                                    deletefromPriceTracker(
+                                            userId, widget.restaurantId)
+                                        .whenComplete(() =>
+                                            AlertDialogBuilder.showSnackbar(
+                                                'Message',
+                                                'Deleted from Wishlist'));
+                                  }
+                                  setState(() {
+                                    _pricetrackerState = !_pricetrackerState;
+                                  });
+                                },
+                                child: Icon(
+                                  _pricetrackerState
+                                      ? Icons.analytics
+                                      : Icons.analytics_outlined,
                                   color: Colors.black,
                                 ),
                               ),

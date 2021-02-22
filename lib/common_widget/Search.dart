@@ -42,7 +42,7 @@ class _SearchState extends State<Search> {
             ),
             onTap: () {
               Get.to(
-                ProductPage(
+                () => ProductPage(
                   restaurantId: snapshotData.docs[index].data()['id'],
                   restaurantName: snapshotData.docs[index].data()['name'],
                   restaurantAddress: snapshotData.docs[index].data()['address'],

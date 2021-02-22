@@ -4,12 +4,12 @@ import 'package:fyp_uiprototype/common_widget/dataController.dart';
 import 'package:fyp_uiprototype/pages/screens/ProductPage.dart';
 import 'package:fyp_uiprototype/auth_service/FirebaseAuthService.dart';
 
-class Tools extends StatefulWidget {
+class Wishlist extends StatefulWidget {
   @override
-  _ToolsState createState() => _ToolsState();
+  _WishlistState createState() => _WishlistState();
 }
 
-class _ToolsState extends State<Tools> {
+class _WishlistState extends State<Wishlist> {
   final userId = currentUserId();
   bool flag = false;
   List<dynamic> arrList = [];
@@ -57,11 +57,11 @@ class _ToolsState extends State<Tools> {
   Widget build(BuildContext context) {
     if (flag) {
       return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Text('Tools'),
-          backgroundColor: Colors.white,
-        ),
+        // appBar: AppBar(
+        //   automaticallyImplyLeading: false,
+        //   title: Text('Tools'),
+        //   backgroundColor: Colors.white,
+        // ),
         body: GetBuilder<DataController>(
           init: DataController(),
           builder: (value) {
@@ -90,7 +90,7 @@ class _ToolsState extends State<Tools> {
                       return GestureDetector(
                         onTap: () {
                           Get.to(
-                            ProductPage(
+                            () => ProductPage(
                               restaurantId:
                                   snapshot.data[arrList[index]].data()['id'],
                               restaurantName:
@@ -254,11 +254,11 @@ class _ToolsState extends State<Tools> {
       );
     } else if (!flag) {
       return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Text('Tools'),
-          backgroundColor: Colors.white,
-        ),
+        // appBar: AppBar(
+        //   automaticallyImplyLeading: false,
+        //   title: Text('Tools'),
+        //   backgroundColor: Colors.white,
+        // ),
         body: Center(
           child: Text('The Wishlist is Empty'),
         ),

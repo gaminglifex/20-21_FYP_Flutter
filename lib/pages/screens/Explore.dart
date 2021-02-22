@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp_uiprototype/common_widget/dataController.dart';
 import 'package:get/get.dart';
 import 'package:fyp_uiprototype/pages/screens/ProductPage.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class Explore extends StatefulWidget {
@@ -89,7 +89,7 @@ class _ExploreState extends State<Explore> {
                             return GestureDetector(
                               onTap: () {
                                 Get.to(
-                                  ProductPage(
+                                  () => ProductPage(
                                     restaurantId:
                                         snapshot.data[index].data()['id'],
                                     restaurantName:

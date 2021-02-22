@@ -11,7 +11,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    Timer(Duration(milliseconds: 3000), () => Get.toNamed('/landingPage'));
+    Timer(Duration(milliseconds: 3000), () => Get.offNamed('/landingPage'));
     super.initState();
   }
 
