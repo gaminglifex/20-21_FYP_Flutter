@@ -142,8 +142,7 @@ class _ProductPageState extends State<ProductPage> {
                                   allowHalfRating: true,
                                   itemCount: 5,
                                   itemSize: 16.0,
-                                  itemPadding:
-                                      EdgeInsets.symmetric(horizontal: 1.0),
+                                  itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
                                   itemBuilder: (context, _) => Icon(
                                     Icons.star,
                                     color: Colors.amber,
@@ -162,8 +161,7 @@ class _ProductPageState extends State<ProductPage> {
                               height: 30.0,
                               child: MaterialButton(
                                 onPressed: () {
-                                  Share.share(
-                                      "${widget.restaurantName}\n${widget.restaurantAddress}");
+                                  Share.share("${widget.restaurantName}\n${widget.restaurantAddress}");
                                 },
                                 child: Icon(
                                   Icons.share,
@@ -180,27 +178,18 @@ class _ProductPageState extends State<ProductPage> {
                               child: MaterialButton(
                                 onPressed: () {
                                   if (_wishlistState != true) {
-                                    addtoWishlist(userId, widget.restaurantId)
-                                        .whenComplete(() =>
-                                            AlertDialogBuilder.showSnackbar(
-                                                'Message',
-                                                'Added to Wishlist'));
+                                    addtoWishlist(userId, widget.restaurantId).whenComplete(
+                                        () => AlertDialogBuilder.showSnackbar('Message', 'Added to Wishlist'));
                                   } else if (_wishlistState == true) {
-                                    deletefromWishlist(
-                                            userId, widget.restaurantId)
-                                        .whenComplete(() =>
-                                            AlertDialogBuilder.showSnackbar(
-                                                'Message',
-                                                'Deleted from Wishlist'));
+                                    deletefromWishlist(userId, widget.restaurantId).whenComplete(
+                                        () => AlertDialogBuilder.showSnackbar('Message', 'Deleted from Wishlist'));
                                   }
                                   setState(() {
                                     _wishlistState = !_wishlistState;
                                   });
                                 },
                                 child: Icon(
-                                  _wishlistState
-                                      ? Icons.turned_in
-                                      : Icons.bookmark_border,
+                                  _wishlistState ? Icons.turned_in : Icons.bookmark_border,
                                   color: Colors.black,
                                 ),
                               ),
@@ -214,28 +203,18 @@ class _ProductPageState extends State<ProductPage> {
                               child: MaterialButton(
                                 onPressed: () {
                                   if (_pricetrackerState != true) {
-                                    addtoPriceTracker(
-                                            userId, widget.restaurantId)
-                                        .whenComplete(() =>
-                                            AlertDialogBuilder.showSnackbar(
-                                                'Message',
-                                                'Added to PriceTracker'));
+                                    addtoPriceTracker(userId, widget.restaurantId).whenComplete(
+                                        () => AlertDialogBuilder.showSnackbar('Message', 'Added to PriceTracker'));
                                   } else if (_pricetrackerState == true) {
-                                    deletefromPriceTracker(
-                                            userId, widget.restaurantId)
-                                        .whenComplete(() =>
-                                            AlertDialogBuilder.showSnackbar(
-                                                'Message',
-                                                'Deleted from Wishlist'));
+                                    deletefromPriceTracker(userId, widget.restaurantId).whenComplete(
+                                        () => AlertDialogBuilder.showSnackbar('Message', 'Deleted from Wishlist'));
                                   }
                                   setState(() {
                                     _pricetrackerState = !_pricetrackerState;
                                   });
                                 },
                                 child: Icon(
-                                  _pricetrackerState
-                                      ? Icons.analytics
-                                      : Icons.analytics_outlined,
+                                  _pricetrackerState ? Icons.analytics : Icons.analytics_outlined,
                                   color: Colors.black,
                                 ),
                               ),
@@ -321,7 +300,7 @@ class _ProductPageState extends State<ProductPage> {
                       title: Text(widget.restaurantAddress),
                       onTap: () {
                         Get.to(
-                          MapSample(
+                          () => MapSample(
                               restaurantId: widget.restaurantId,
                               restaurantName: widget.restaurantName,
                               restaurantAddress: widget.restaurantAddress,
@@ -363,9 +342,7 @@ class _ProductPageState extends State<ProductPage> {
                         ),
                         children: [
                           TextSpan(text: 'Data Retrieved From' + ' '),
-                          TextSpan(
-                              text: widget.source,
-                              style: TextStyle(fontWeight: FontWeight.bold)),
+                          TextSpan(text: widget.source, style: TextStyle(fontWeight: FontWeight.bold)),
                         ],
                       ),
                     ),

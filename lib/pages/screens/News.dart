@@ -11,6 +11,7 @@ class _NewsState extends State<News> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        centerTitle: true,
         title: Text('News'),
         backgroundColor: Colors.white,
       ),

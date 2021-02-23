@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fyp_uiprototype/pages/screens/Explore.dart';
 import 'package:fyp_uiprototype/pages/screens/News.dart';
-import 'package:fyp_uiprototype/pages/screens/Nearby.dart';
+import 'package:fyp_uiprototype/pages/screens/Nearby_new.dart';
 import 'package:fyp_uiprototype/pages/screens/Tools_new.dart';
 import 'package:fyp_uiprototype/pages/screens/Profile.dart';
 
@@ -86,24 +86,16 @@ class _BottomNavState extends State<BottomNav> with TickerProviderStateMixin {
                 unselectedLabelColor: Colors.grey[600],
                 tabs: <Widget>[
                   Tab(
-                    icon: _tabController.index == 0
-                        ? Icon(Icons.search_outlined)
-                        : Icon(Icons.search_rounded),
+                    icon: _tabController.index == 0 ? Icon(Icons.search_outlined) : Icon(Icons.search_rounded),
                   ),
                   Tab(
-                    icon: _tabController.index == 1
-                        ? Icon(Icons.article_outlined)
-                        : Icon(Icons.article_rounded),
+                    icon: _tabController.index == 1 ? Icon(Icons.article_outlined) : Icon(Icons.article_rounded),
                   ),
                   Tab(
-                    icon: _tabController.index == 2
-                        ? Icon(Icons.explore_outlined)
-                        : Icon(Icons.explore_rounded),
+                    icon: _tabController.index == 2 ? Icon(Icons.explore_outlined) : Icon(Icons.explore_rounded),
                   ),
                   Tab(
-                    icon: _tabController.index == 3
-                        ? Icon(Icons.build_outlined)
-                        : Icon(Icons.build_rounded),
+                    icon: _tabController.index == 3 ? Icon(Icons.build_outlined) : Icon(Icons.build_rounded),
                   ),
                   Tab(
                     icon: _tabController.index == 4

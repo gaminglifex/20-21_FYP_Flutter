@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:fyp_uiprototype/pages/screens/ProductPage.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class Explore extends StatefulWidget {
   @override
@@ -13,7 +15,12 @@ class Explore extends StatefulWidget {
 class _ExploreState extends State<Explore> {
   // final CollectionReference _restaurantRef =
   //     FirebaseFirestore.instance.collection('restaurant');
-
+  final List<String> imgList = [
+    'https://firebasestorage.googleapis.com/v0/b/eietest2020.appspot.com/o/Banner4.jpg?alt=media&token=ed575438-209d-4d0b-96dc-be882f5405d5',
+    'https://firebasestorage.googleapis.com/v0/b/eietest2020.appspot.com/o/Banner3.png?alt=media&token=2a8315ea-dc43-408b-9350-58a0001dd0c4',
+    'https://firebasestorage.googleapis.com/v0/b/eietest2020.appspot.com/o/Banner2.jpg?alt=media&token=3cfe1a91-a6f7-46a2-b595-4e4da5ff279d',
+    'https://firebasestorage.googleapis.com/v0/b/eietest2020.appspot.com/o/Banner.jpg?alt=media&token=6e1c217e-234e-4515-bbff-67cfa922e52b',
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,17 +49,37 @@ class _ExploreState extends State<Explore> {
                 width: double.infinity,
                 height: 200,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.white.withOpacity(0),
                   borderRadius: BorderRadius.circular(10.0),
-                  boxShadow: [
-                    BoxShadow(color: Colors.black),
-                  ],
+
                   //TODO: image
+                  /*
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: NetworkImage(
                         "https://firebasestorage.googleapis.com/v0/b/eietest2020.appspot.com/o/Banner.jpg?alt=media&token=6e1c217e-234e-4515-bbff-67cfa922e52b"),
                   ),
+                  */
+                ),
+                child: CarouselSlider(
+                  options: CarouselOptions(
+                    autoPlay: true,
+                    aspectRatio: 2.0,
+                    enlargeCenterPage: true,
+                    pageViewKey: PageStorageKey<String>('carousel_slider'),
+                  ),
+                  items: imgList
+                      .map(
+                        (item) => Container(
+                          width: double.infinity,
+                          height: 200,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(item, fit: BoxFit.cover, width: double.infinity),
+                          ),
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
             ),
@@ -60,15 +87,12 @@ class _ExploreState extends State<Explore> {
               padding: const EdgeInsets.only(left: 8.0),
               child: Text(
                 'Recommended',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold),
+                style: TextStyle(color: Colors.black, fontSize: 22.0, fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(
               width: 400.0,
-              height: 300.0,
+              height: 220.0,
               child: GetBuilder<DataController>(
                 init: DataController(),
                 builder: (value) {
@@ -90,25 +114,16 @@ class _ExploreState extends State<Explore> {
                               onTap: () {
                                 Get.to(
                                   () => ProductPage(
-                                    restaurantId:
-                                        snapshot.data[index].data()['id'],
-                                    restaurantName:
-                                        snapshot.data[index].data()['name'],
-                                    restaurantAddress:
-                                        snapshot.data[index].data()['address'],
-                                    latitude: snapshot.data[index]
-                                        .data()['location']
-                                        .latitude,
-                                    longitude: snapshot.data[index]
-                                        .data()['location']
-                                        .longitude,
+                                    restaurantId: snapshot.data[index].data()['id'],
+                                    restaurantName: snapshot.data[index].data()['name'],
+                                    restaurantAddress: snapshot.data[index].data()['address'],
+                                    latitude: snapshot.data[index].data()['location'].latitude,
+                                    longitude: snapshot.data[index].data()['location'].longitude,
                                     gmap: snapshot.data[index].data()['gmap'],
                                     image: snapshot.data[index].data()['image'],
                                     link: snapshot.data[index].data()['link'],
-                                    source:
-                                        snapshot.data[index].data()['source'],
-                                    rating:
-                                        snapshot.data[index].data()['rating'],
+                                    source: snapshot.data[index].data()['source'],
+                                    rating: snapshot.data[index].data()['rating'],
                                   ),
                                   transition: Transition.leftToRightWithFade,
                                   arguments: snapshot.data[index],
@@ -119,28 +134,22 @@ class _ExploreState extends State<Explore> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Container(
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Container(
                                         height: 150.0,
                                         width: 200.0,
                                         decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
+                                            borderRadius: BorderRadius.circular(10.0),
                                             image: DecorationImage(
                                                 fit: BoxFit.cover,
-                                                image: NetworkImage(snapshot
-                                                    .data[index]
-                                                    .data()['image']))),
+                                                image: NetworkImage(snapshot.data[index].data()['image']))),
                                       ),
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 8.0),
+                                        padding: const EdgeInsets.only(top: 8.0),
                                         child: Container(
-                                          constraints:
-                                              BoxConstraints(maxWidth: 200.0),
+                                          constraints: BoxConstraints(maxWidth: 200.0),
                                           child: Text(
                                             snapshot.data[index].data()['name'],
                                             maxLines: 1,
@@ -155,36 +164,25 @@ class _ExploreState extends State<Explore> {
                                         ),
                                       ),
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 3.0),
+                                        padding: const EdgeInsets.only(top: 3.0),
                                         child: Container(
-                                          constraints:
-                                              BoxConstraints(maxWidth: 200.0),
+                                          constraints: BoxConstraints(maxWidth: 200.0),
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               Text(
-                                                '@' +
-                                                    snapshot.data[index]
-                                                        .data()['source'],
+                                                '@' + snapshot.data[index].data()['source'],
                                               ),
                                               RatingBar.builder(
-                                                initialRating: double.parse(
-                                                    snapshot.data[index]
-                                                        .data()['rating']),
+                                                initialRating: double.parse(snapshot.data[index].data()['rating']),
                                                 minRating: 1,
                                                 direction: Axis.horizontal,
                                                 allowHalfRating: true,
                                                 itemCount: 5,
                                                 itemSize: 16.0,
-                                                itemPadding:
-                                                    EdgeInsets.symmetric(
-                                                        horizontal: 1.0),
-                                                itemBuilder: (context, _) =>
-                                                    Icon(
+                                                itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                                                itemBuilder: (context, _) => Icon(
                                                   Icons.star,
                                                   color: Colors.amber,
                                                 ),

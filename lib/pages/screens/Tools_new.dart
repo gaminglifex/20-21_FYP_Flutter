@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:fyp_uiprototype/auth_service/FirebaseAuthService.dart';
 import 'package:fyp_uiprototype/pages/screens/PriceTracker.dart';
 import 'package:fyp_uiprototype/pages/screens/Wishlist.dart';
-import 'package:fyp_uiprototype/pages/screens/Testing.dart';
 
 class Tools extends StatefulWidget {
   @override
@@ -42,6 +41,7 @@ class _ToolsState extends State<Tools> with TickerProviderStateMixin {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         title: Text('Tools'),
+        centerTitle: true,
         bottom: TabBar(
           controller: _NestedTabController,
           indicatorColor: Colors.teal,

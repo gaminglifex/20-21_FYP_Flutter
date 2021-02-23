@@ -13,6 +13,7 @@ class _ProfileState extends State<Profile> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text('Profile'),
+        centerTitle: true,
         backgroundColor: Colors.white,
       ),
       body: Stack(

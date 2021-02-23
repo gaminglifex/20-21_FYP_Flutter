@@ -12,13 +12,7 @@ class MapSample extends StatefulWidget {
   final double latitude;
   final double longitude;
   final String gmap;
-  MapSample(
-      {this.restaurantId,
-      this.restaurantName,
-      this.restaurantAddress,
-      this.latitude,
-      this.longitude,
-      this.gmap});
+  MapSample({this.restaurantId, this.restaurantName, this.restaurantAddress, this.latitude, this.longitude, this.gmap});
   @override
   State<MapSample> createState() => MapSampleState();
 }
@@ -139,9 +133,7 @@ class MapSampleState extends State<MapSample> {
                       child: Card(
                         elevation: 8.0,
                         color: Colors.white,
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(14.0))),
+                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14.0))),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -167,12 +159,8 @@ class MapSampleState extends State<MapSample> {
                                 //     ),
                                 //   );
                                 // });
-                                Clipboard.setData(ClipboardData(
-                                        text: widget.restaurantAddress))
-                                    .then((result) {
-                                  AlertDialogBuilder.showSnackbar(
-                                      'Message', 'Added to Wishlist');
-                                });
+                                Clipboard.setData(ClipboardData(text: widget.restaurantAddress)).whenComplete(
+                                    () => AlertDialogBuilder.showSnackbar('Message', 'Added to Wishlist'));
                               },
                               child: Icon(Icons.content_copy),
                             ),

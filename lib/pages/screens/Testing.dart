@@ -251,3 +251,21 @@ class _LineChartSample3State extends State<LineChartSample3> {
     );
   }
 }
+
+/*
+imgList
+                      .map(
+                        (item) => Container(
+                          width: double.infinity,
+                          height: 200,
+                          child: Center(
+                            child: Image.network(item, fit: BoxFit.cover, width: double.infinity),
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                        ),
+                      )
+                      .toList(),
+*/
