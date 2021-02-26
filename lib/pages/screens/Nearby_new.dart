@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:fyp_uiprototype/pages/screens/coffee_maps_flutter.dart';
+import 'package:fyp_uiprototype/pages/screens/MapsClass.dart';
 
 class Nearby extends StatefulWidget {
   @override
@@ -20,7 +20,7 @@ class _NearbyState extends State<Nearby> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    coffeeShops.forEach((element) {
+    Shops.forEach((element) {
       allMarkers.add(Marker(
           markerId: MarkerId(element.shopName),
           draggable: false,
@@ -37,7 +37,7 @@ class _NearbyState extends State<Nearby> {
     }
   }
 
-  _coffeeShopList(index) {
+  _ShopList(index) {
     return AnimatedBuilder(
       animation: _pageController,
       builder: (BuildContext context, Widget widget) {
@@ -65,7 +65,7 @@ class _NearbyState extends State<Nearby> {
                       horizontal: 10.0,
                       vertical: 20.0,
                     ),
-                    height: 125.0,
+                    height: 150.0,
                     width: 275.0,
                     decoration: BoxDecoration(borderRadius: BorderRadius.circular(10.0), boxShadow: [
                       BoxShadow(
@@ -83,25 +83,31 @@ class _NearbyState extends State<Nearby> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.only(
                                       bottomLeft: Radius.circular(10.0), topLeft: Radius.circular(10.0)),
-                                  image: DecorationImage(
-                                      image: NetworkImage(coffeeShops[index].thumbNail), fit: BoxFit.cover))),
+                                  image:
+                                      DecorationImage(image: NetworkImage(Shops[index].thumbNail), fit: BoxFit.cover))),
                           SizedBox(width: 5.0),
                           Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  coffeeShops[index].shopName,
-                                  style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  coffeeShops[index].address,
-                                  style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w600),
+                                Container(
+                                  width: 170.0,
+                                  child: Text(
+                                    Shops[index].shopName,
+                                    style: TextStyle(fontSize: 12.5, fontWeight: FontWeight.bold),
+                                  ),
                                 ),
                                 Container(
                                   width: 170.0,
                                   child: Text(
-                                    coffeeShops[index].description,
+                                    Shops[index].address,
+                                    style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                                Container(
+                                  width: 170.0,
+                                  child: Text(
+                                    Shops[index].description,
                                     style: TextStyle(fontSize: 11.0, fontWeight: FontWeight.w300),
                                   ),
                                 )
@@ -126,7 +132,7 @@ class _NearbyState extends State<Nearby> {
               height: MediaQuery.of(context).size.height - 50.0,
               width: MediaQuery.of(context).size.width,
               child: GoogleMap(
-                initialCameraPosition: CameraPosition(target: LatLng(40.7128, -74.0060), zoom: 12.0),
+                initialCameraPosition: CameraPosition(target: LatLng(22.298596, 114.174291), zoom: 14.0),
                 markers: Set.from(allMarkers),
                 onMapCreated: mapCreated,
               ),
@@ -138,9 +144,9 @@ class _NearbyState extends State<Nearby> {
                 width: MediaQuery.of(context).size.width,
                 child: PageView.builder(
                   controller: _pageController,
-                  itemCount: coffeeShops.length,
+                  itemCount: Shops.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return _coffeeShopList(index);
+                    return _ShopList(index);
                   },
                 ),
               ),
@@ -157,6 +163,6 @@ class _NearbyState extends State<Nearby> {
 
   moveCamera() {
     _controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-        target: coffeeShops[_pageController.page.toInt()].locationCoords, zoom: 14.0, bearing: 45.0, tilt: 45.0)));
+        target: Shops[_pageController.page.toInt()].locationCoords, zoom: 16.0, bearing: 0.0, tilt: 0.0)));
   }
 }
