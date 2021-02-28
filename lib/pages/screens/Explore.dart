@@ -6,6 +6,7 @@ import 'package:fyp_uiprototype/pages/screens/ProductPage.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:fyp_uiprototype/auth_service/FirebaseAuthService.dart';
 
 class Explore extends StatefulWidget {
   @override
@@ -112,6 +113,7 @@ class _ExploreState extends State<Explore> {
                           itemBuilder: (BuildContext context, int index) {
                             return GestureDetector(
                               onTap: () {
+                                updateViews(snapshot.data[index].data()['id']);
                                 Get.to(
                                   () => ProductPage(
                                     restaurantId: snapshot.data[index].data()['id'],

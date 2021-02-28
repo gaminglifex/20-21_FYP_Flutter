@@ -30,12 +30,11 @@ String currentUserId() {
   return _currentUser.uid;
 }
 
-Future<void> signInWithEmailAndPassword(
-    String email, String password, BuildContext context) async {
+Future<void> signInWithEmailAndPassword(String email, String password, BuildContext context) async {
   try {
     // ignore: unused_local_variable
-    final UserCredential authResult = await _fireAuth.signInWithCredential(
-        EmailAuthProvider.credential(email: email, password: password));
+    final UserCredential authResult =
+        await _fireAuth.signInWithCredential(EmailAuthProvider.credential(email: email, password: password));
     if (authStateChanges == null) {
       print('authState is null');
       return null;
@@ -81,11 +80,10 @@ Future<void> signInWithEmailAndPassword(
   }
 } */
 
-Future<void> createUserWithEmailAndPassword(String username, String email,
-    String password, BuildContext context) async {
+Future<void> createUserWithEmailAndPassword(
+    String username, String email, String password, BuildContext context) async {
   try {
-    UserCredential userCredential = await _fireAuth
-        .createUserWithEmailAndPassword(email: email, password: password);
+    UserCredential userCredential = await _fireAuth.createUserWithEmailAndPassword(email: email, password: password);
     User user = userCredential.user;
     await _fireStore.collection('users').doc(user.uid).set({
       'id': user.uid,
@@ -135,8 +133,7 @@ Future<void> signOut(BuildContext context) async {
 Future<void> addtoWishlist(String userId, String storeId) async {
   // final DocumentReference _checkfield =
   //     _fireStore.collection('user').doc(_currentUser.uid);
-  final DocumentSnapshot _snapfield =
-      await _fireStore.collection('users').doc(_currentUser.uid).get();
+  final DocumentSnapshot _snapfield = await _fireStore.collection('users').doc(_currentUser.uid).get();
   if (_snapfield.data()['wishlist'] == null) {
     _fireStore.collection('users').doc(_currentUser.uid).set({
       'wishlist': [storeId]
@@ -152,8 +149,7 @@ Future<void> addtoWishlist(String userId, String storeId) async {
 }
 
 Future<void> deletefromWishlist(String userId, String storeId) async {
-  final DocumentSnapshot _snapfield =
-      await _fireStore.collection('users').doc(_currentUser.uid).get();
+  final DocumentSnapshot _snapfield = await _fireStore.collection('users').doc(_currentUser.uid).get();
   for (var i in _snapfield.data()['wishlist']) {
     if (i == storeId) {
       _fireStore.collection('users').doc(_currentUser.uid).update({
@@ -173,13 +169,11 @@ Future<void> deletefromWishlist(String userId, String storeId) async {
 }
 
 Future<dynamic> productCheckWishlist(String userId, String storeId) async {
-  final DocumentSnapshot _snapfield =
-      await _fireStore.collection('users').doc(_currentUser.uid).get();
+  final DocumentSnapshot _snapfield = await _fireStore.collection('users').doc(_currentUser.uid).get();
   bool flag = true;
   // final arrData = _snapfield.data()['wishlist'];
   // return (arrData);
-  if (_snapfield.data()['wishlist'] == null ||
-      _snapfield.data()['wishlist'].isEmpty) {
+  if (_snapfield.data()['wishlist'] == null || _snapfield.data()['wishlist'].isEmpty) {
     flag = false;
   } else if (!_snapfield.data()['wishlist'].isEmpty) {
     for (var i in _snapfield.data()['wishlist']) {
@@ -211,13 +205,11 @@ Future<dynamic> productCheckWishlist(String userId, String storeId) async {
 }
 
 Future<dynamic> userCheckWishlist(String userId) async {
-  final DocumentSnapshot _snapfield =
-      await _fireStore.collection('users').doc(_currentUser.uid).get();
+  final DocumentSnapshot _snapfield = await _fireStore.collection('users').doc(_currentUser.uid).get();
   bool flag = true;
   // final arrData = _snapfield.data()['wishlist'];
   // return (arrData);
-  if (_snapfield.data()['wishlist'] == null ||
-      _snapfield.data()['wishlist'].isEmpty) {
+  if (_snapfield.data()['wishlist'] == null || _snapfield.data()['wishlist'].isEmpty) {
     flag = false;
   } else if (!_snapfield.data()['wishlist'].isEmpty) {
     flag = true;
@@ -226,8 +218,7 @@ Future<dynamic> userCheckWishlist(String userId) async {
 }
 
 Future<dynamic> getWishlist(String userId) async {
-  final DocumentSnapshot _snapfield =
-      await _fireStore.collection('users').doc(_currentUser.uid).get();
+  final DocumentSnapshot _snapfield = await _fireStore.collection('users').doc(_currentUser.uid).get();
   final arrData = _snapfield.data()['wishlist'];
   return arrData;
 }
@@ -235,8 +226,7 @@ Future<dynamic> getWishlist(String userId) async {
 Future<void> addtoPriceTracker(String userId, String storeId) async {
   // final DocumentReference _checkfield =
   //     _fireStore.collection('user').doc(_currentUser.uid);
-  final DocumentSnapshot _snapfield =
-      await _fireStore.collection('users').doc(_currentUser.uid).get();
+  final DocumentSnapshot _snapfield = await _fireStore.collection('users').doc(_currentUser.uid).get();
   if (_snapfield.data()['pricetracker'] == null) {
     _fireStore.collection('users').doc(_currentUser.uid).set({
       'pricetracker': [storeId]
@@ -252,8 +242,7 @@ Future<void> addtoPriceTracker(String userId, String storeId) async {
 }
 
 Future<void> deletefromPriceTracker(String userId, String storeId) async {
-  final DocumentSnapshot _snapfield =
-      await _fireStore.collection('users').doc(_currentUser.uid).get();
+  final DocumentSnapshot _snapfield = await _fireStore.collection('users').doc(_currentUser.uid).get();
   for (var i in _snapfield.data()['pricetracker']) {
     if (i == storeId) {
       _fireStore.collection('users').doc(_currentUser.uid).update({
@@ -273,13 +262,11 @@ Future<void> deletefromPriceTracker(String userId, String storeId) async {
 }
 
 Future<dynamic> productCheckPriceTracker(String userId, String storeId) async {
-  final DocumentSnapshot _snapfield =
-      await _fireStore.collection('users').doc(_currentUser.uid).get();
+  final DocumentSnapshot _snapfield = await _fireStore.collection('users').doc(_currentUser.uid).get();
   bool flag = true;
   // final arrData = _snapfield.data()['wishlist'];
   // return (arrData);
-  if (_snapfield.data()['pricetracker'] == null ||
-      _snapfield.data()['pricetracker'].isEmpty) {
+  if (_snapfield.data()['pricetracker'] == null || _snapfield.data()['pricetracker'].isEmpty) {
     flag = false;
   } else if (!_snapfield.data()['pricetracker'].isEmpty) {
     for (var i in _snapfield.data()['pricetracker']) {
@@ -311,13 +298,11 @@ Future<dynamic> productCheckPriceTracker(String userId, String storeId) async {
 }
 
 Future<dynamic> userCheckPriceTracker(String userId) async {
-  final DocumentSnapshot _snapfield =
-      await _fireStore.collection('users').doc(_currentUser.uid).get();
+  final DocumentSnapshot _snapfield = await _fireStore.collection('users').doc(_currentUser.uid).get();
   bool flag = true;
   // final arrData = _snapfield.data()['wishlist'];
   // return (arrData);
-  if (_snapfield.data()['pricetracker'] == null ||
-      _snapfield.data()['pricetracker'].isEmpty) {
+  if (_snapfield.data()['pricetracker'] == null || _snapfield.data()['pricetracker'].isEmpty) {
     flag = false;
   } else if (!_snapfield.data()['pricetracker'].isEmpty) {
     flag = true;
@@ -326,10 +311,26 @@ Future<dynamic> userCheckPriceTracker(String userId) async {
 }
 
 Future<dynamic> getPriceTracker(String userId) async {
-  final DocumentSnapshot _snapfield =
-      await _fireStore.collection('users').doc(_currentUser.uid).get();
+  final DocumentSnapshot _snapfield = await _fireStore.collection('users').doc(_currentUser.uid).get();
   final arrData = _snapfield.data()['pricetracker'];
   return arrData;
+}
+
+Future<void> updateViews(String storeId) async {
+  // final DocumentReference _checkfield =
+  //     _fireStore.collection('user').doc(_currentUser.uid);
+  final _snapfield = await _fireStore.collection('restaurant').doc(storeId).get();
+  if (_snapfield.data()['views'] == null) {
+    _fireStore.collection('restaurant').doc(storeId).set({'views': '1'}, SetOptions(merge: true));
+    print('it is null!');
+  } else if (_snapfield.data()['views'] != null) {
+    var temp = _snapfield.data()['views'];
+    _fireStore.collection('restaurant').doc(storeId).update({
+      'views': (int.parse(temp) + 1).toString(),
+    });
+    print('it is not null!');
+  }
+  print("The is the store Id! $storeId");
 }
 
 void dispose() {}
