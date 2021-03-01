@@ -333,4 +333,89 @@ Future<void> updateViews(String storeId) async {
   print("The is the store Id! $storeId");
 }
 
+Future<void> checkAndupdateRating(String userId, String storeId, String ratingMark) async {
+  // final DocumentReference _checkfield =
+  //     _fireStore.collection('user').doc(_currentUser.uid);
+  final _snapfield = await _fireStore.collection('restaurant').doc(storeId).get();
+  DocumentSnapshot _snapuser = await _fireStore.collection('users').doc(_currentUser.uid).get();
+  if (_snapuser.data()['ratingMap'] == null) {
+    _fireStore.collection('users').doc(_currentUser.uid).set({
+      'ratingMap': [
+        {'id': storeId, 'rating': ratingMark}
+      ]
+    }, SetOptions(merge: true));
+  } else if (_snapuser.data()['ratingMap'] != null) {
+    bool flag = false;
+    for (var i = 0; i < _snapuser.data()['ratingMap'].length; i++) {
+      if (_snapuser.data()['ratingMap'][i]['id'] == storeId) {
+        flag = true;
+      }
+    }
+    if (flag != true) {
+      _fireStore.collection('users').doc(_currentUser.uid).update(
+        {
+          'ratingMap': FieldValue.arrayUnion([
+            {'id': storeId, 'rating': ratingMark}
+          ]),
+        },
+      );
+    } else {
+      AlertDialogBuilder.showSnackbar('Message', 'You can only rate once');
+    }
+  }
+
+  if (_snapfield.data()['rating'] == null) {
+    _fireStore.collection('restaurant').doc(storeId).set({'rating': '0'}, SetOptions(merge: true));
+  }
+
+  if (_snapfield.data()['ratingtotal'] == null && _snapfield.data()['ratingPpl'] == null) {
+    _fireStore.collection('restaurant').doc(storeId).set({'ratingtotal': ratingMark}, SetOptions(merge: true));
+    _fireStore.collection('restaurant').doc(storeId).set({'ratingPpl': '1'}, SetOptions(merge: true));
+    _fireStore.collection('restaurant').doc(storeId).update({
+      'rating': ratingMark,
+    });
+    print('it is null!');
+  } else if (_snapfield.data()['ratingtotal'] != null && _snapfield.data()['ratingPpl'] != null) {
+    var tempTotal = _snapfield.data()['ratingtotal'];
+    var tempPpl = _snapfield.data()['ratingPpl'];
+    var ratingTotal = double.parse(tempTotal) + double.parse(ratingMark);
+    var totalPpl = double.parse(tempPpl) + 1;
+    var tempRating = ratingTotal / totalPpl;
+    _fireStore.collection('restaurant').doc(storeId).update({
+      'rating': tempRating.toString(),
+      'ratingtotal': ratingTotal.toString(),
+      'ratingPpl': totalPpl.toString(),
+    });
+    print('it is not null!');
+  }
+  print("The is the store Id! $storeId");
+}
+
+Future<bool> checkRating(String userId, String storeId) async {
+  bool flag = false;
+  DocumentSnapshot _snapuser = await _fireStore.collection('users').doc(_currentUser.uid).get();
+  if (_snapuser.data()['ratingMap'] != null) {
+    for (var i = 0; i < _snapuser.data()['ratingMap'].length; i++) {
+      if (_snapuser.data()['ratingMap'][i]['id'] == storeId) {
+        flag = true;
+      }
+    }
+  }
+  return flag;
+}
+
+Future<String> retrieveRating(String userId, String storeId) async {
+  String rating = '';
+  DocumentSnapshot _snapuser = await _fireStore.collection('users').doc(_currentUser.uid).get();
+  if (_snapuser.data()['ratingMap'] != null) {
+    for (var i = 0; i < _snapuser.data()['ratingMap'].length; i++) {
+      if (_snapuser.data()['ratingMap'][i]['id'] == storeId) {
+        rating = _snapuser.data()['ratingMap'][i]['rating'];
+        break;
+      }
+    }
+  }
+  return rating;
+}
+
 void dispose() {}

@@ -1,5 +1,6 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp_uiprototype/pages/screens/GoogleMap.dart';
 import 'package:get/get.dart';
@@ -40,9 +41,10 @@ class ProductPage extends StatefulWidget {
 class _ProductPageState extends State<ProductPage> {
   // final CollectionReference _restaurantRef =
   //     FirebaseFirestore.instance.collection("restaurant");
-
   bool _wishlistState = false;
   bool _pricetrackerState = false;
+  bool _ignoreState = false;
+  String getRating = '0';
   final userId = currentUserId();
 
   void _launchUrl(String launchUrl) async {
@@ -55,12 +57,20 @@ class _ProductPageState extends State<ProductPage> {
     }
   }
 
+  void check3() async {
+    _ignoreState = await checkRating(userId, widget.restaurantId);
+    if (_ignoreState == true) {
+      getRating = await retrieveRating(userId, widget.restaurantId);
+    } else if (_ignoreState != true) {
+      getRating = '0';
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     //check Wishlist
-
     void check() async {
       await productCheckWishlist(userId, widget.restaurantId).then((value) {
         print(value);
@@ -89,6 +99,7 @@ class _ProductPageState extends State<ProductPage> {
 
     check();
     check2();
+    check3();
   }
 
   @override
@@ -147,6 +158,7 @@ class _ProductPageState extends State<ProductPage> {
                                     Icons.star,
                                     color: Colors.amber,
                                   ),
+                                  ignoreGestures: true,
                                   onRatingUpdate: (rating) {
                                     print(rating);
                                   },
@@ -225,6 +237,56 @@ class _ProductPageState extends State<ProductPage> {
                     ),
                   ],
                 ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 0.1,
+                          blurRadius: 0.1,
+                          offset: Offset(0, 0), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RatingBar.builder(
+                              initialRating: double.parse(getRating),
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+                              itemCount: 5,
+                              itemSize: 30.0,
+                              ignoreGestures: _ignoreState,
+                              itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                              itemBuilder: (context, _) => Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              onRatingUpdate: (rating) {
+                                checkAndupdateRating(userId, widget.restaurantId, rating.toString())
+                                    .whenComplete(() => check3());
+                              },
+                            ),
+                          ],
+                        ),
+                        Container(
+                          child: _ignoreState ? Text('Thanks for your rating!') : Text('Leave your Rating here!'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
             Padding(
