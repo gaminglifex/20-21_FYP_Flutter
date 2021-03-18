@@ -6,13 +6,13 @@ import 'package:fyp_uiprototype/common_widget/alert_dialog.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MapSample extends StatefulWidget {
-  final String restaurantId;
-  final String restaurantName;
-  final String restaurantAddress;
+  final String storesId;
+  final String storesName;
+  final String storesAddress;
   final double latitude;
   final double longitude;
   final String gmap;
-  MapSample({this.restaurantId, this.restaurantName, this.restaurantAddress, this.latitude, this.longitude, this.gmap});
+  MapSample({this.storesId, this.storesName, this.storesAddress, this.latitude, this.longitude, this.gmap});
   @override
   State<MapSample> createState() => MapSampleState();
 }
@@ -30,11 +30,11 @@ class MapSampleState extends State<MapSample> {
       _markers.add(
         Marker(
           consumeTapEvents: false,
-          markerId: MarkerId(widget.restaurantId),
+          markerId: MarkerId(widget.storesId),
           position: LatLng(widget.latitude, widget.longitude),
           infoWindow: InfoWindow(
-            title: "${widget.restaurantName}",
-            snippet: "${widget.restaurantAddress}",
+            title: "${widget.storesName}",
+            snippet: "${widget.storesAddress}",
           ),
         ),
       );
@@ -87,7 +87,7 @@ class MapSampleState extends State<MapSample> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         backgroundColor: Colors.white,
-        title: Text(widget.restaurantName),
+        title: Text(widget.storesName),
       ),
       body: Stack(
         children: [
@@ -109,7 +109,7 @@ class MapSampleState extends State<MapSample> {
                   children: [
                     FloatingActionButton(
                       onPressed: () {
-                        _launchUrl(widget.restaurantAddress);
+                        _launchUrl(widget.storesAddress);
                       },
                       child: Icon(Icons.map),
                       backgroundColor: Colors.white,
@@ -141,7 +141,7 @@ class MapSampleState extends State<MapSample> {
                             Expanded(
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Text(widget.restaurantAddress),
+                                child: Text(widget.storesAddress),
                               ),
                             ),
                             VerticalDivider(
@@ -159,7 +159,7 @@ class MapSampleState extends State<MapSample> {
                                 //     ),
                                 //   );
                                 // });
-                                Clipboard.setData(ClipboardData(text: widget.restaurantAddress)).whenComplete(
+                                Clipboard.setData(ClipboardData(text: widget.storesAddress)).whenComplete(
                                     () => AlertDialogBuilder.showSnackbar('Message', 'Added to Wishlist'));
                               },
                               child: Icon(Icons.content_copy),

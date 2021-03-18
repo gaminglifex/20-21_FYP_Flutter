@@ -11,8 +11,7 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  final CollectionReference _restaurantRef =
-      FirebaseFirestore.instance.collection("restaurant");
+  final CollectionReference _storesRef = FirebaseFirestore.instance.collection("stores");
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,7 @@ class _ProductPageState extends State<ProductPage> {
       body: Stack(
         children: [
           FutureBuilder(
-            future: _restaurantRef.doc(widget.productId).get(),
+            future: _storesRef.doc(widget.productId).get(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Scaffold(
@@ -79,9 +78,9 @@ class _ProductPageState extends State<ProductPage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => MapSample(
-                                  restaurantId: widget.productId,
-                                  restaurantName: documentData['name'],
-                                  restaurantAddress: documentData['address'],
+                                  storesId: widget.productId,
+                                  storesName: documentData['name'],
+                                  storesAddress: documentData['address'],
                                   latitude: documentData['location'].latitude,
                                   longitude: documentData['location'].longitude,
                                 ),

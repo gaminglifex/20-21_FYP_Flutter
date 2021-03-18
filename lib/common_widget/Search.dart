@@ -22,8 +22,7 @@ class _SearchState extends State<Search> {
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
             leading: CircleAvatar(
-              backgroundImage:
-                  NetworkImage(snapshotData.docs[index].data()['image']),
+              backgroundImage: NetworkImage(snapshotData.docs[index].data()['image']),
             ),
             title: Text(
               snapshotData.docs[index].data()['name'],
@@ -35,21 +34,16 @@ class _SearchState extends State<Search> {
             ),
             subtitle: Text(
               snapshotData.docs[index].data()['type'],
-              style: TextStyle(
-                  color: Colors.grey,
-                  fontWeight: FontWeight.normal,
-                  fontSize: 24.0),
+              style: TextStyle(color: Colors.grey, fontWeight: FontWeight.normal, fontSize: 24.0),
             ),
             onTap: () {
               Get.to(
                 () => ProductPage(
-                  restaurantId: snapshotData.docs[index].data()['id'],
-                  restaurantName: snapshotData.docs[index].data()['name'],
-                  restaurantAddress: snapshotData.docs[index].data()['address'],
-                  latitude:
-                      snapshotData.docs[index].data()['location'].latitude,
-                  longitude:
-                      snapshotData.docs[index].data()['location'].longitude,
+                  storesId: snapshotData.docs[index].data()['id'],
+                  storesName: snapshotData.docs[index].data()['name'],
+                  storesAddress: snapshotData.docs[index].data()['address'],
+                  latitude: snapshotData.docs[index].data()['location'].latitude,
+                  longitude: snapshotData.docs[index].data()['location'].longitude,
                   gmap: snapshotData.docs[index].data()['gmap'],
                   image: snapshotData.docs[index].data()['image'],
                   link: snapshotData.docs[index].data()['link'],

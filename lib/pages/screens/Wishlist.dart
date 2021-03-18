@@ -66,7 +66,7 @@ class _WishlistState extends State<Wishlist> {
           init: DataController(),
           builder: (value) {
             return FutureBuilder(
-              future: value.getData('restaurant'),
+              future: value.getData('stores'),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
@@ -91,22 +91,13 @@ class _WishlistState extends State<Wishlist> {
                         onTap: () {
                           Get.to(
                             () => ProductPage(
-                              restaurantId:
-                                  snapshot.data[arrList[index]].data()['id'],
-                              restaurantName:
-                                  snapshot.data[arrList[index]].data()['name'],
-                              restaurantAddress: snapshot.data[arrList[index]]
-                                  .data()['address'],
-                              latitude: snapshot.data[arrList[index]]
-                                  .data()['location']
-                                  .latitude,
-                              longitude: snapshot.data[arrList[index]]
-                                  .data()['location']
-                                  .longitude,
-                              gmap:
-                                  snapshot.data[arrList[index]].data()['gmap'],
-                              image:
-                                  snapshot.data[arrList[index]].data()['image'],
+                              storesId: snapshot.data[arrList[index]].data()['id'],
+                              storesName: snapshot.data[arrList[index]].data()['name'],
+                              storesAddress: snapshot.data[arrList[index]].data()['address'],
+                              latitude: snapshot.data[arrList[index]].data()['location'].latitude,
+                              longitude: snapshot.data[arrList[index]].data()['location'].longitude,
+                              gmap: snapshot.data[arrList[index]].data()['gmap'],
+                              image: snapshot.data[arrList[index]].data()['image'],
                               link: snapshot.data[index].data()['link'],
                               source: snapshot.data[index].data()['source'],
                               rating: snapshot.data[index].data()['rating'],
@@ -118,8 +109,7 @@ class _WishlistState extends State<Wishlist> {
                         child: Dismissible(
                           key: Key(snapshot.data[arrList[index]].reference.id),
                           onDismissed: (_) {
-                            deletefromWishlist(userId,
-                                snapshot.data[arrList[index]].reference.id);
+                            deletefromWishlist(userId, snapshot.data[arrList[index]].reference.id);
                           },
                           background: deleteBgItem(),
                           child: Padding(
@@ -135,20 +125,16 @@ class _WishlistState extends State<Wishlist> {
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
                                             fit: BoxFit.cover,
-                                            image: NetworkImage(snapshot
-                                                .data[arrList[index]]
-                                                .data()['image']))),
+                                            image: NetworkImage(snapshot.data[arrList[index]].data()['image']))),
                                   ),
                                   Column(
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Container(
-                                          constraints:
-                                              BoxConstraints(maxWidth: 200.0),
+                                          constraints: BoxConstraints(maxWidth: 200.0),
                                           child: Text(
-                                            snapshot.data[arrList[index]]
-                                                .data()['name'],
+                                            snapshot.data[arrList[index]].data()['name'],
                                             style: TextStyle(
                                               color: Colors.black,
                                             ),

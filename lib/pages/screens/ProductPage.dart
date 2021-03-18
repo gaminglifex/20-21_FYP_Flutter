@@ -11,9 +11,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ProductPage extends StatefulWidget {
-  final String restaurantId;
-  final String restaurantName;
-  final String restaurantAddress;
+  final String storesId;
+  final String storesName;
+  final String storesAddress;
   final double latitude;
   final double longitude;
   final String gmap;
@@ -22,9 +22,9 @@ class ProductPage extends StatefulWidget {
   final String source;
   final String rating;
   ProductPage({
-    this.restaurantId,
-    this.restaurantName,
-    this.restaurantAddress,
+    this.storesId,
+    this.storesName,
+    this.storesAddress,
     this.latitude,
     this.longitude,
     this.gmap,
@@ -57,22 +57,13 @@ class _ProductPageState extends State<ProductPage> {
     }
   }
 
-  void check3() async {
-    _ignoreState = await checkRating(userId, widget.restaurantId);
-    if (_ignoreState == true) {
-      getRating = await retrieveRating(userId, widget.restaurantId);
-    } else if (_ignoreState != true) {
-      getRating = '0';
-    }
-  }
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     //check Wishlist
     void check() async {
-      await productCheckWishlist(userId, widget.restaurantId).then((value) {
+      await productCheckWishlist(userId, widget.storesId).then((value) {
         print(value);
         if (value == true) {
           setState(() {
@@ -85,7 +76,7 @@ class _ProductPageState extends State<ProductPage> {
     }
 
     void check2() async {
-      await productCheckPriceTracker(userId, widget.restaurantId).then((value) {
+      await productCheckPriceTracker(userId, widget.storesId).then((value) {
         print(value);
         if (value == true) {
           setState(() {
@@ -95,6 +86,15 @@ class _ProductPageState extends State<ProductPage> {
           _pricetrackerState = false;
         }
       });
+    }
+
+    void check3() async {
+      _ignoreState = await checkRating(userId, widget.storesId);
+      if (_ignoreState) {
+        getRating = await retrieveRating(userId, widget.storesId);
+      } else if (_ignoreState != true) {
+        getRating = '0';
+      }
     }
 
     check();
@@ -139,7 +139,7 @@ class _ProductPageState extends State<ProductPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  widget.restaurantName,
+                                  widget.storesName,
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 18.0,
@@ -173,7 +173,7 @@ class _ProductPageState extends State<ProductPage> {
                               height: 30.0,
                               child: MaterialButton(
                                 onPressed: () {
-                                  Share.share("${widget.restaurantName}\n${widget.restaurantAddress}");
+                                  Share.share("${widget.storesName}\n${widget.storesAddress}");
                                 },
                                 child: Icon(
                                   Icons.share,
@@ -190,10 +190,10 @@ class _ProductPageState extends State<ProductPage> {
                               child: MaterialButton(
                                 onPressed: () {
                                   if (_wishlistState != true) {
-                                    addtoWishlist(userId, widget.restaurantId).whenComplete(
+                                    addtoWishlist(userId, widget.storesId).whenComplete(
                                         () => AlertDialogBuilder.showSnackbar('Message', 'Added to Wishlist'));
                                   } else if (_wishlistState == true) {
-                                    deletefromWishlist(userId, widget.restaurantId).whenComplete(
+                                    deletefromWishlist(userId, widget.storesId).whenComplete(
                                         () => AlertDialogBuilder.showSnackbar('Message', 'Deleted from Wishlist'));
                                   }
                                   setState(() {
@@ -215,10 +215,10 @@ class _ProductPageState extends State<ProductPage> {
                               child: MaterialButton(
                                 onPressed: () {
                                   if (_pricetrackerState != true) {
-                                    addtoPriceTracker(userId, widget.restaurantId).whenComplete(
+                                    addtoPriceTracker(userId, widget.storesId).whenComplete(
                                         () => AlertDialogBuilder.showSnackbar('Message', 'Added to PriceTracker'));
                                   } else if (_pricetrackerState == true) {
-                                    deletefromPriceTracker(userId, widget.restaurantId).whenComplete(
+                                    deletefromPriceTracker(userId, widget.storesId).whenComplete(
                                         () => AlertDialogBuilder.showSnackbar('Message', 'Deleted from Wishlist'));
                                   }
                                   setState(() {
@@ -274,8 +274,7 @@ class _ProductPageState extends State<ProductPage> {
                                 color: Colors.amber,
                               ),
                               onRatingUpdate: (rating) {
-                                checkAndupdateRating(userId, widget.restaurantId, rating.toString())
-                                    .whenComplete(() => check3());
+                                checkAndupdateRating(userId, widget.storesId, rating.toString());
                               },
                             ),
                           ],
@@ -359,13 +358,13 @@ class _ProductPageState extends State<ProductPage> {
                     child: ListTile(
                       leading: Icon(Icons.location_on),
                       trailing: Icon(Icons.arrow_forward_ios),
-                      title: Text(widget.restaurantAddress),
+                      title: Text(widget.storesAddress),
                       onTap: () {
                         Get.to(
                           () => MapSample(
-                              restaurantId: widget.restaurantId,
-                              restaurantName: widget.restaurantName,
-                              restaurantAddress: widget.restaurantAddress,
+                              storesId: widget.storesId,
+                              storesName: widget.storesName,
+                              storesAddress: widget.storesAddress,
                               latitude: widget.latitude,
                               longitude: widget.longitude,
                               gmap: widget.gmap),

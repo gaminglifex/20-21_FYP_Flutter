@@ -96,7 +96,7 @@ class _PriceTrackerState extends State<PriceTracker> {
           init: DataController(),
           builder: (value) {
             return FutureBuilder(
-              future: value.getData('restaurant'),
+              future: value.getData('stores'),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
@@ -143,9 +143,9 @@ class _PriceTrackerState extends State<PriceTracker> {
                         onTap: () {
                           Get.to(
                             () => ProductPage(
-                              restaurantId: snapshot.data[arrList[index]].data()['id'],
-                              restaurantName: snapshot.data[arrList[index]].data()['name'],
-                              restaurantAddress: snapshot.data[arrList[index]].data()['address'],
+                              storesId: snapshot.data[arrList[index]].data()['id'],
+                              storesName: snapshot.data[arrList[index]].data()['name'],
+                              storesAddress: snapshot.data[arrList[index]].data()['address'],
                               latitude: snapshot.data[arrList[index]].data()['location'].latitude,
                               longitude: snapshot.data[arrList[index]].data()['location'].longitude,
                               gmap: snapshot.data[arrList[index]].data()['gmap'],

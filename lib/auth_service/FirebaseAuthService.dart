@@ -223,6 +223,25 @@ Future<dynamic> getWishlist(String userId) async {
   return arrData;
 }
 
+Future<dynamic> userCheckRecommendation(String userId) async {
+  final DocumentSnapshot _snapfield = await _fireStore.collection('recommender').doc(_currentUser.uid).get();
+  bool flag = true;
+  // final arrData = _snapfield.data()['wishlist'];
+  // return (arrData);
+  if (_snapfield.data()['storeid'] == null || _snapfield.data()['storeid'].isEmpty) {
+    flag = false;
+  } else if (!_snapfield.data()['storeid'].isEmpty) {
+    flag = true;
+  }
+  return flag;
+}
+
+Future<dynamic> getRecommendation(String userId) async {
+  final DocumentSnapshot _snapfield = await _fireStore.collection('recommender').doc(_currentUser.uid).get();
+  final arrData = _snapfield.data()['storeid'];
+  return arrData;
+}
+
 Future<void> addtoPriceTracker(String userId, String storeId) async {
   // final DocumentReference _checkfield =
   //     _fireStore.collection('user').doc(_currentUser.uid);
@@ -319,13 +338,13 @@ Future<dynamic> getPriceTracker(String userId) async {
 Future<void> updateViews(String storeId) async {
   // final DocumentReference _checkfield =
   //     _fireStore.collection('user').doc(_currentUser.uid);
-  final _snapfield = await _fireStore.collection('restaurant').doc(storeId).get();
+  final _snapfield = await _fireStore.collection('stores').doc(storeId).get();
   if (_snapfield.data()['views'] == null) {
-    _fireStore.collection('restaurant').doc(storeId).set({'views': '1'}, SetOptions(merge: true));
+    _fireStore.collection('stores').doc(storeId).set({'views': '1'}, SetOptions(merge: true));
     print('it is null!');
   } else if (_snapfield.data()['views'] != null) {
     var temp = _snapfield.data()['views'];
-    _fireStore.collection('restaurant').doc(storeId).update({
+    _fireStore.collection('stores').doc(storeId).update({
       'views': (int.parse(temp) + 1).toString(),
     });
     print('it is not null!');
@@ -336,7 +355,7 @@ Future<void> updateViews(String storeId) async {
 Future<void> checkAndupdateRating(String userId, String storeId, String ratingMark) async {
   // final DocumentReference _checkfield =
   //     _fireStore.collection('user').doc(_currentUser.uid);
-  final _snapfield = await _fireStore.collection('restaurant').doc(storeId).get();
+  final _snapfield = await _fireStore.collection('stores').doc(storeId).get();
   DocumentSnapshot _snapuser = await _fireStore.collection('users').doc(_currentUser.uid).get();
   if (_snapuser.data()['ratingMap'] == null) {
     _fireStore.collection('users').doc(_currentUser.uid).set({
@@ -365,13 +384,13 @@ Future<void> checkAndupdateRating(String userId, String storeId, String ratingMa
   }
 
   if (_snapfield.data()['rating'] == null) {
-    _fireStore.collection('restaurant').doc(storeId).set({'rating': '0'}, SetOptions(merge: true));
+    _fireStore.collection('stores').doc(storeId).set({'rating': '0'}, SetOptions(merge: true));
   }
 
   if (_snapfield.data()['ratingtotal'] == null && _snapfield.data()['ratingPpl'] == null) {
-    _fireStore.collection('restaurant').doc(storeId).set({'ratingtotal': ratingMark}, SetOptions(merge: true));
-    _fireStore.collection('restaurant').doc(storeId).set({'ratingPpl': '1'}, SetOptions(merge: true));
-    _fireStore.collection('restaurant').doc(storeId).update({
+    _fireStore.collection('stores').doc(storeId).set({'ratingtotal': ratingMark}, SetOptions(merge: true));
+    _fireStore.collection('stores').doc(storeId).set({'ratingPpl': '1'}, SetOptions(merge: true));
+    _fireStore.collection('stores').doc(storeId).update({
       'rating': ratingMark,
     });
     print('it is null!');
@@ -381,7 +400,7 @@ Future<void> checkAndupdateRating(String userId, String storeId, String ratingMa
     var ratingTotal = double.parse(tempTotal) + double.parse(ratingMark);
     var totalPpl = double.parse(tempPpl) + 1;
     var tempRating = ratingTotal / totalPpl;
-    _fireStore.collection('restaurant').doc(storeId).update({
+    _fireStore.collection('stores').doc(storeId).update({
       'rating': tempRating.toString(),
       'ratingtotal': ratingTotal.toString(),
       'ratingPpl': totalPpl.toString(),

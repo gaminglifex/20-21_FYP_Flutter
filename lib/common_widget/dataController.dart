@@ -16,7 +16,7 @@ class DataController extends GetxController {
 
   Future queryData(String queryString) async {
     return FirebaseFirestore.instance
-        .collection('restaurant')
+        .collection('stores')
         .orderBy('name')
         .startAt([queryString]).endAt([queryString + '\uf8ff']).get();
   }
