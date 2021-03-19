@@ -96,7 +96,7 @@ class _PriceTrackerState extends State<PriceTracker> {
           init: DataController(),
           builder: (value) {
             return FutureBuilder(
-              future: value.getData('stores'),
+              future: value.getData('restaurant'),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
@@ -150,9 +150,9 @@ class _PriceTrackerState extends State<PriceTracker> {
                               longitude: snapshot.data[arrList[index]].data()['location'].longitude,
                               gmap: snapshot.data[arrList[index]].data()['gmap'],
                               image: snapshot.data[arrList[index]].data()['image'],
-                              link: snapshot.data[index].data()['link'],
-                              source: snapshot.data[index].data()['source'],
-                              rating: snapshot.data[index].data()['rating'],
+                              link: snapshot.data[arrList[index]].data()['link'],
+                              source: snapshot.data[arrList[index]].data()['source'],
+                              rating: snapshot.data[arrList[index]].data()['rating'],
                             ),
                             transition: Transition.leftToRightWithFade,
                             arguments: snapshot.data[arrList[index]],
