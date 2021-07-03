@@ -1,14 +1,7 @@
 # FYP_UI with Fluuter & Firebase integration
 
-A new Flutter project.
+A Flutter project for locating the best deals in Hong Kong
+I mainly responsible for the UI development & database design & integration
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-Actually the UI/UX & the database structure are designed by ME
